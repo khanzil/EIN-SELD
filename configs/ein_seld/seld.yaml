@@ -41,7 +41,7 @@ training:
 inference:
   infer_id: EINV2_tPIT_n1
   testset_type: dev # dev | eval
-  test_fold: None
+  test_fold: 1
   overlap: 1&2
   train_ids: EINV2_tPIT_n1
   models: EINV2
