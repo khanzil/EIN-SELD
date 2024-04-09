@@ -40,8 +40,8 @@ training:
   remark: None
 inference:
   infer_id: EINV2_tPIT_n1
-  testset_type: dev # dev | eval
-  test_fold: 1
+  testset_type: eval # dev | eval
+  test_fold: None
   overlap: 1&2
   train_ids: EINV2_tPIT_n1
   models: EINV2
