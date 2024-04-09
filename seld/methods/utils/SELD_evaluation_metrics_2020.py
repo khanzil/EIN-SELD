@@ -42,7 +42,7 @@ class SELDMetrics(object):
 
         self._spatial_T = doa_threshold
         self._nb_classes = nb_classes
-        self._conf_mat = np.zeros(nb_classes+2, nb_classes+2)
+        self._conf_mat = np.zeros((nb_classes+2, nb_classes+2))
 
     def compute_seld_scores(self):
         '''
