@@ -214,7 +214,30 @@ class SELDMetrics(object):
             self._D += np.maximum(0, loc_FN - loc_FP)
             self._I += np.maximum(0, loc_FP - loc_FN)
         return
+            
+    def update_confusion_matrix(self, pred, gt):
+        num_events = len(gt.keys())
+        for block_cnt in range(num_events):
+            FN_class = []
+            FP_class = []
+            for class_cnt in range(self._nb_classes):
+                if class_cnt in gt[block_cnt] and class_cnt in pred[block_cnt]:
+                    self._conf_mat[class_cnt, class_cnt] += 1
+                elif class_cnt in gt[block_cnt] and class_cnt not in pred[block_cnt]:
+                    FN_class.append(class_cnt)
+                elif class_cnt not in gt[block_cnt] and class_cnt in pred[block_cnt]:
+                    FP_class.append(class_cnt)
+            if FP_class == []:
+                FP_class.append(self._nb_classes)
+            if FN_class == []:
+                FN_class.append(self._nb_classes)
+            
+            if (FN_class[0] != FP_class[0]):
+                self._conf_mat[FP_class, FN_class] += (0.5 if (len(FN_class)+len(FP_class)) >= 3 else 1)
 
+        self._conf_mat[:, -1] = np.sum(self._conf_mat[:, :-1], axis=1)    
+        self._conf_mat[-1, :] = np.sum(self._conf_mat[:-1, :], axis=0)
+            
 
 def distance_between_spherical_coordinates_rad(az1, ele1, az2, ele2):
     """
