@@ -28,8 +28,8 @@ training:
   loss_beta: 0.5
   PIT_type: tPIT
   batch_size: 32
-  train_fold: 1,2,3,4,5,6
-  valid_fold: None
+  train_fold: 2,3,4,5,6
+  valid_fold: 1
   overlap: 1&2
   optimizer: adam
   lr: 0.0005
