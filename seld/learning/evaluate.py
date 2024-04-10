@@ -104,7 +104,10 @@ def evaluate(cfg, dataset):
     print('---------------------------------------------------------------------------------------------------'
         +'-------------------------------------------------')
 
-    print(dcase2020_metric._conf_mat)
+    for row in dcase2020_metric._conf_mat:
+        for col in row:
+            print('{:.3f}' .format(col), end=' ')
+        print('')
     out_eval_dir = Path(cfg['workspace_dir']).joinpath('out_eval').joinpath(cfg['method']) \
         .joinpath(cfg['inference']['infer_id'])
     out_eval_dir.mkdir(parents=True, exist_ok=True)

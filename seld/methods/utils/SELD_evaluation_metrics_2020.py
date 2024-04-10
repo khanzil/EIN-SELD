@@ -251,6 +251,8 @@ class SELDMetrics(object):
                 if (FN_class[0] != FP_class[0]):
                     for FN in FN_class:
                         self._conf_mat[FP_class, FN] += (0.5 if (len(FN_class)+len(FP_class)) >= 3 else 1)
+            self._conf_mat /= self._conf_mat[0,0]
+
 def distance_between_spherical_coordinates_rad(az1, ele1, az2, ele2):
     """
     Angular distance between two spherical coordinates
