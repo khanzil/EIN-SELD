@@ -174,7 +174,7 @@ class SELDMetrics(object):
                     gt_ind_list = gt_deg[block_cnt][class_cnt][0][0]
                     pred_ind_list = pred_deg[block_cnt][class_cnt][0][0]
                     for gt_ind, gt_val in enumerate(gt_ind_list):
-                        print(gt_deg[block_cnt][class_cnt][0][1].size)
+                        print(len(gt_deg[block_cnt][class_cnt][0][1]))
                         if gt_val in pred_ind_list:
                             total_framewise_matching_doa += 1
                             pred_ind = pred_ind_list.index(gt_val)
