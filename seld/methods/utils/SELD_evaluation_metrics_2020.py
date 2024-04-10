@@ -221,8 +221,8 @@ class SELDMetrics(object):
         for block_cnt in range(num_events):
             if len(gt[block_cnt].keys()) == 0:
                 continue
-            gt_mat = np.zeros((self._nb_classes, gt[block_cnt][[*gt[block_cnt]][0]][0][1].shape[0]))
-            pred_mat = np.zeros((self._nb_classes, gt[block_cnt][[*gt[block_cnt]][0]][0][1].shape[0]))
+            gt_mat = np.zeros((self._nb_classes, len(gt[block_cnt][[*gt[block_cnt]][0]][0][1])))
+            pred_mat = np.zeros((self._nb_classes, len(gt[block_cnt][[*gt[block_cnt]][0]][0][1])))
             for class_cnt in range(self._nb_classes):
                 if class_cnt in gt[block_cnt]:
                     gt_mat[class_cnt, gt[block_cnt][class_cnt][0][0]] = 1
