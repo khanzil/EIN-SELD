@@ -78,7 +78,7 @@ def evaluate(cfg, dataset):
     # 2020 metrics
     dcase2020_metric = SELDMetrics2020(nb_classes=len(dataset.label_set), doa_threshold=20)
     dcase2020_metric.update_seld_scores(pred_metrics2020_dict, gt_metrics2020_dict)
-    # dcase2020_metric.update_confusion_matrix(pred_metrics2020_dict, gt_metrics2020_dict)
+    dcase2020_metric.update_confusion_matrix(pred_metrics2020_dict, gt_metrics2020_dict)
     ER_20, F_20, LE_20, LR_20 = dcase2020_metric.compute_seld_scores()
     seld_score_20 = early_stopping_metric([ER_20, F_20], [LE_20, LR_20])
 
@@ -104,7 +104,7 @@ def evaluate(cfg, dataset):
     print('---------------------------------------------------------------------------------------------------'
         +'-------------------------------------------------')
 
-    # print(dcase2020_metric._conf_mat)
+    print(dcase2020_metric._conf_mat)
     out_eval_dir = Path(cfg['workspace_dir']).joinpath('out_eval').joinpath(cfg['method']) \
         .joinpath(cfg['inference']['infer_id'])
     out_eval_dir.mkdir(parents=True, exist_ok=True)

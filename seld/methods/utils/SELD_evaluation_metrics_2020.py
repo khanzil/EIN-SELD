@@ -42,7 +42,7 @@ class SELDMetrics(object):
 
         self._spatial_T = doa_threshold
         self._nb_classes = nb_classes
-        self._conf_mat = np.zeros((nb_classes+2, nb_classes+2))
+        self._conf_mat = np.zeros((nb_classes+1, nb_classes+1))
 
     def compute_seld_scores(self):
         '''
@@ -174,6 +174,7 @@ class SELDMetrics(object):
                     gt_ind_list = gt_deg[block_cnt][class_cnt][0][0]
                     pred_ind_list = pred_deg[block_cnt][class_cnt][0][0]
                     for gt_ind, gt_val in enumerate(gt_ind_list):
+                        print(gt_deg[block_cnt][class_cnt][0][1].size)
                         if gt_val in pred_ind_list:
                             total_framewise_matching_doa += 1
                             pred_ind = pred_ind_list.index(gt_val)
@@ -218,28 +219,39 @@ class SELDMetrics(object):
             
     def update_confusion_matrix(self, pred, gt):
         num_events = len(gt.keys())
+        frame_len = gt[0][[*gt][0]][0][1].shape[0]
+
         for block_cnt in range(num_events):
-            FN_class = []
-            FP_class = []
+            gt_mat = np.zeros((self._nb_classes, frame_len))
+            pred_mat = np.zeros((self._nb_classes, frame_len))
             for class_cnt in range(self._nb_classes):
-                if class_cnt in gt[block_cnt] and class_cnt in pred[block_cnt]:
-                    self._conf_mat[class_cnt, class_cnt] += 1
-                elif class_cnt in gt[block_cnt] and class_cnt not in pred[block_cnt]:
-                    FN_class.append(class_cnt)
-                elif class_cnt not in gt[block_cnt] and class_cnt in pred[block_cnt]:
-                    FP_class.append(class_cnt)
-            if FP_class == []:
-                FP_class.append(self._nb_classes)
-            if FN_class == []:
-                FN_class.append(self._nb_classes)
-            
-            if (FN_class[0] != FP_class[0]):
-                self._conf_mat[FP_class, FN_class] += (0.5 if (len(FN_class)+len(FP_class)) >= 3 else 1)
+                if class_cnt in gt[block_cnt]:
+                    gt_mat[class_cnt, gt[block_cnt][class_cnt][0][0]] = 1
 
-        self._conf_mat[:, -1] = np.sum(self._conf_mat[:, :-1], axis=1)    
-        self._conf_mat[-1, :] = np.sum(self._conf_mat[:-1, :], axis=0)
-            
+                if class_cnt in pred[block_cnt]:
+                    pred_mat[class_cnt, pred[block_cnt][class_cnt][0][0]] = 1
 
+            result = 2*gt_mat - pred_mat
+
+            if np.sum(np.abs(result)) == 0:
+                continue
+
+            for idx in range (gt_mat.shape[1]):                
+                FP_class = np.argwhere(result[:, idx] == -1)
+                FN_class = np.argwhere(result[:, idx] == 2)
+                TP_class = np.argwhere(result[:, idx] == 1)
+
+                for TP in TP_class:
+                    self._conf_mat[TP, TP] += 1
+
+                if len(FP_class) == 0:
+                    FP_class = np.append(FP_class, self._nb_classes)
+                if len(FN_class) == 0:
+                    FN_class = np.append(FN_class, self._nb_classes)
+
+                if (FN_class[0] != FP_class[0]):
+                    for FN in FN_class:
+                        self._conf_mat[FP_class, FN] += (0.5 if (len(FN_class)+len(FP_class)) >= 3 else 1)
 def distance_between_spherical_coordinates_rad(az1, ele1, az2, ele2):
     """
     Angular distance between two spherical coordinates
