@@ -219,11 +219,11 @@ class SELDMetrics(object):
             
     def update_confusion_matrix(self, pred, gt):
         num_events = len(gt.keys())
-        frame_len = gt[0][[*gt][0]][0][1].shape[0]
-
         for block_cnt in range(num_events):
-            gt_mat = np.zeros((self._nb_classes, frame_len))
-            pred_mat = np.zeros((self._nb_classes, frame_len))
+            if len(gt[block_cnt].keys()) == 0:
+                continue
+            gt_mat = np.zeros((self._nb_classes, gt[block_cnt][[*gt][0]][0][1].shape[0]))
+            pred_mat = np.zeros((self._nb_classes, gt[block_cnt][[*gt][0]][0][1].shape[0]))
             for class_cnt in range(self._nb_classes):
                 if class_cnt in gt[block_cnt]:
                     gt_mat[class_cnt, gt[block_cnt][class_cnt][0][0]] = 1
