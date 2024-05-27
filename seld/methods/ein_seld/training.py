@@ -62,9 +62,9 @@ class Trainer(BaseTrainer):
         """
         batch_x = batch_sample.batch_out_dict['waveform']
         batch_target = {
-            'ov': batch_sample['ov'],
-            'sed': batch_sample['sed_label'],
-            'doa': batch_sample['doa_label']
+            'ov': batch_sample.batch_out_dict['ov'],
+            'sed': batch_sample.batch_out_dict['sed_label'],
+            'doa': batch_sample.batch_out_dict['doa_label']
         }
         if self.cuda:
             batch_x = batch_x.cuda(non_blocking=True)
@@ -123,8 +123,8 @@ class Trainer(BaseTrainer):
 
                 batch_x = batch_sample.batch_out_dict['waveform']
                 batch_target = {
-                    'sed': batch_sample['sed_label'],
-                    'doa': batch_sample['doa_label']
+                    'sed': batch_sample.batch_out_dict['sed_label'],
+                    'doa': batch_sample.batch_out_dict['doa_label']
                 }
 
                 if self.cuda:
