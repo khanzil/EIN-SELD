@@ -38,9 +38,9 @@ class LogmelIntensity_Extractor(nn.Module):
 
     def forward(self, x):
         """
-        input: 
+        input:
             (batch_size, channels=4, data_length)
-        output: 
+        output:
             (batch_size, channels, time_steps, freq_bins)
         """
         if x.ndim != 3:

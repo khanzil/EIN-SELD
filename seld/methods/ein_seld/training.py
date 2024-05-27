@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from methods.training import BaseTrainer
 from methods.utils.data_utilities import to_metrics2020_format
-
+from .data_augmentation.DataAug import SpecAug, AudioChannelSwapping, RandomCutoff, FrequencyShifting
 
 class Trainer(BaseTrainer):
 
@@ -57,8 +57,8 @@ class Trainer(BaseTrainer):
         }
 
     def train_step(self, batch_sample, epoch_it):
-        """ Perform a train step
-
+        """ 
+            Perform a train step
         """
         batch_x = batch_sample['waveform']
         batch_target = {
@@ -76,6 +76,21 @@ class Trainer(BaseTrainer):
         self.model.train()
         batch_x = self.af_extractor(batch_x)
         batch_x = (batch_x - self.mean) / self.std
+
+        acs = AudioChannelSwapping()
+        specaug = SpecAug()
+        rc = RandomCutoff()
+        fs = FrequencyShifting()
+ 
+        for batch_idx in range (batch_x.shape[0]):
+            batch_x[batch_idx,:,:,:], batch_target['doa'] = acs(batch_x[batch_idx,:,:,:], batch_target['doa'])
+            batch_x[batch_idx,:,:,:] = fs(batch_x[batch_idx,:,:,:])
+            p = np.random.rand()
+            if p<0.33:
+                batch_x[batch_idx,:,:,:] = specaug(batch_x[batch_idx,:,:,:])
+            elif p<0.67:
+                batch_x[batch_idx,:,:,:] = rc(batch_x[batch_idx,:,:,:])
+
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
         loss_dict[self.cfg['training']['loss_type']].backward()
@@ -84,13 +99,13 @@ class Trainer(BaseTrainer):
         self.train_losses['loss_all'] += loss_dict['all']
         self.train_losses['loss_sed'] += loss_dict['sed']
         self.train_losses['loss_doa'] += loss_dict['doa']
-        
+
 
     def validate_step(self, generator=None, max_batch_num=None, valid_type='train', epoch_it=0):
-        """ Perform the validation on the train, valid set
-
-        Generate a batch of segmentations each time
-        """
+        """ 
+            Perform the validation on the train, valid set
+            Generate a batch of segmentations each time
+        """ 
 
         if valid_type == 'train':
             train_losses = self.train_losses.copy()

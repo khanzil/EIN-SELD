@@ -26,3 +26,4 @@ def infer(cfg, dataset, **infer_initializer):
     inferer.fusion(submissions_dir, preds)
 
 
+
