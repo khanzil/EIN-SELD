@@ -60,7 +60,7 @@ class Trainer(BaseTrainer):
         """ 
             Perform a train step
         """
-        batch_x = batch_sample['waveform']
+        batch_x = batch_sample.batch_out_dict['waveform']
         batch_target = {
             'ov': batch_sample['ov'],
             'sed': batch_sample['sed_label'],
@@ -121,7 +121,7 @@ class Trainer(BaseTrainer):
                 if batch_idx == max_batch_num:
                     break
 
-                batch_x = batch_sample['waveform']
+                batch_x = batch_sample.batch_out_dict['waveform']
                 batch_target = {
                     'sed': batch_sample['sed_label'],
                     'doa': batch_sample['doa_label']
