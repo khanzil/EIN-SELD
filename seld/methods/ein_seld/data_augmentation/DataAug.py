@@ -84,8 +84,8 @@ class AudioChannelSwapping(nn.Module):
     def forward(self, x, gt_list, format = 'foa'):
         '''
         input:
-            x (Tensor): features channels, size (channel x time x freq)
-            gt_list: ground truth label of x, tensor size (frame,track,x,y,z)
+            x (Tensor): features channels, size (batch x channel x time x freq)
+            gt_list: ground truth label of x, tensor size (batch,frame,track,x,y,z)
             format: audio format
         output:
             y (Tensor): swapped channels, same size as x
@@ -99,53 +99,53 @@ class AudioChannelSwapping(nn.Module):
         if format == 'foa':
             rot_azi = torch.randint(0, 8)
             if rot_azi == 0:
-                y[[1, 3, 4, 6],:,:] = x[[3, 1, 6, 4],:,:] # swap channels
-                y[[1, 4],:,:] *= -1
+                y[:,[1, 3, 4, 6],:,:] = x[:,[3, 1, 6, 4],:,:] # swap channels
+                y[:,[1, 4],:,:] *= -1
 
-                y_gt_list[:,:,[2,3]] = y_gt_list[:,:,[3,2]]
-                y_gt_list[:,:,3] *= -1
+                y_gt_list[:,:,:,[0,1]] = gt_list[:,:,:,[1,0]]
+                y_gt_list[:,:,:,1] *= -1
 
             elif rot_azi == 1:
                 pass
             elif rot_azi == 2:
-                y[[1, 3],:,:] = x[[3, 1],:,:]
-                y[3,:,:] *= -1
-                y[[4, 6],:,:] = x[[6, 4],:,:]
-                y[6,:,:] *= -1
-                y_gt_list[:,3] += 90   
+                y[:,[1, 3, 4, 6],:,:] = x[:,[3, 1], 6, 4,:,:]
+                y[:,[3,6],:,:] *= -1
+
+                y_gt_list[:,:,:,[0,1]] = gt_list[:,:,:,[1,0]]
+                y_gt_list[:,:,:,0] *= -1
             elif rot_azi == 3:
-                y[[1, 3],:,:] = -x[[1, 3],:,:]
-                y[[4, 6],:,:] = -x[[4, 6],:,:] 
-                y_gt_list[:,3] += 180  
+                y[:,[1, 3, 4, 6],:,:] = -x[:,[1, 3, 4, 6],:,:]
+
+                y_gt_list[:,:,:,[0,1]] += -gt_list[:,:,:,[0,1]] 
             elif rot_azi == 4:
-                y[[1, 3],:,:] = -x[[3, 1],:,:]
-                y[[4, 6],:,:] = -x[[6, 4],:,:]
-                y_gt_list[:,3] = -gt_list[:,3]-90 
+                y[:,[1, 3, 4, 6],:,:] = -x[:,[3, 1, 6, 4],:,:]
+
+                y_gt_list[:,:,:,[0,1]] = -gt_list[:,:,:,[1,0]]
             elif rot_azi == 5:
-                y[1,:,:] = -x[1,:,:]
-                y[4,:,:] = -x[4,:,:]
-                y_gt_list[:,3] = -gt_list[:,3]  
+                y[:,[1, 4],:,:] = -x[:,[1, 4],:,:]
+
+                y_gt_list[:,:,:,1] = -gt_list[:,:,:,1]  
             elif rot_azi == 6:
-                y[[1, 3],:,:] = x[[3, 1],:,:]
-                y[[4, 6],:,:] = x[[6, 4],:,:]
-                y_gt_list[:,3] = -gt_list[:,3]+90  
+                y[:,[1, 3, 4, 6],:,:] = x[:,[3, 1, 6, 4],:,:]
+
+                y_gt_list[:,:,:,[0,1]] = -gt_list[:,:,:,[1,0]]  
             elif rot_azi == 7:
-                y[3,:,:] = -x[3,:,:]
-                y[6,:,:] = -x[6,:,:]
-                y_gt_list[:,3] = -gt_list[:,3]+180  
+                y[:,[3, 6],:,:] = -x[:,[3, 6],:,:]
+
+                y_gt_list[:,:,0] = -gt_list[:,:,0]  
 
             rot_ele = torch.randint(0,2)
             if rot_ele == 0:
                 pass
             elif rot_ele == 1:
-                y[2,:,:] = -x[2,:,:]
-                y[5,:,:] = -x[5,:,:]
-                y_gt_list[:,4] = -gt_list[:,4]
-        elif format == 'mic':
+                y[:,[2, 5],:,:] = -x[:,[2, 5],:,:]
+
+                y_gt_list[:,:,:,2] = -gt_list[:,:,:,2]
+        # elif format == 'mic':
             rot = torch.randint(0, 8)
             if rot == 0:
                 y = x[[2, 4, 1, 3],:]
-                y_gt_list[:,3] -= 90
+                y_gt_list[:,:,3] -= 90
                 y_gt_list[:,4] *= -1 
             elif rot == 1:
                 y = x[[4, 2, 3, 1],:]

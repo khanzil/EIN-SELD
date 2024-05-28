@@ -82,14 +82,13 @@ class Trainer(BaseTrainer):
         rc = RandomCutoff()
         fs = FrequencyShifting()
  
-        for batch_idx in range (batch_x.shape[0]):
-            batch_x[batch_idx,:,:,:], batch_target['doa'] = acs(batch_x[batch_idx,:,:,:], batch_target['doa'])
-            batch_x[batch_idx,:,:,:] = fs(batch_x[batch_idx,:,:,:])
-            p = np.random.rand()
-            if p<0.33:
-                batch_x[batch_idx,:,:,:] = specaug(batch_x[batch_idx,:,:,:])
-            elif p<0.67:
-                batch_x[batch_idx,:,:,:] = rc(batch_x[batch_idx,:,:,:])
+        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        batch_x = fs(batch_x)
+        p = np.random.rand()
+        if p<0.33:
+            batch_x = specaug(batch_x)
+        elif p<0.67:
+            batch_x = rc(batch_x)
 
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
