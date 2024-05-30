@@ -58,7 +58,7 @@ class BaseDataset(Dataset):
         # pad_width_before = self.segmented_pad_width[n_segment][0]
         # pad_width_after = self.segmented_pad_width[n_segment][1]
         with h5py.File(data_path, 'r') as hf:
-            x = int16_samples_to_float32(hf['waveform']) # [:, index_begin: index_end])
+            x = int16_samples_to_float32(hf['waveform'][()]) # [:, index_begin: index_end])
         # pad_width = ((0, 0), (pad_width_before, pad_width_after))                    
         # x = np.pad(x, pad_width, mode='constant')
         sample = {
