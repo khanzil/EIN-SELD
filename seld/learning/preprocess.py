@@ -163,9 +163,9 @@ class Preprocessor:
                 batch_x = batch_x.cuda(non_blocking=True)
             batch_y = af_extractor(batch_x)
             _, C, _, F = batch_y.shape
+            print(batch_y.shape)
             features.append(batch_y.cpu().numpy())
         iterator.close()
-        print(features.shape)
         features = np.concatenate(features, axis=0)
         print(features.shape)
         mean = []
