@@ -162,6 +162,7 @@ class Preprocessor:
             if cuda_enabled:
                 batch_x = batch_x.cuda(non_blocking=True)
             batch_y = af_extractor(batch_x)
+            _, C, _, F = batch_y.shape
             features.append(batch_y.cpu().numpy(), axis=0)
         iterator.close()
         features = np.concatenate(features, axis=1)
@@ -170,8 +171,8 @@ class Preprocessor:
         std = []
 
         for ch in range(C):
-            mean.append(np.mean(features[ch], axis=0, keepdims=True))
-            std.append(np.std(features[ch], axis=0, keepdims=True))
+            mean.append(np.mean(features[:,ch,...], axis=1, keepdims=True))
+            std.append(np.std(features[:,ch,...], axis=1, keepdims=True))
         mean = np.stack(mean)[None, ...]
         std = np.stack(std)[None, ...]
 
