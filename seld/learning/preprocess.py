@@ -171,8 +171,8 @@ class Preprocessor:
         std = []
 
         for ch in range(C):
-            mean.append(np.mean(features[:,ch,...].transpose(0,1).reshape(1,-1,F), axis=1, keepdims=True))
-            std.append(np.std(features[:,ch,...].transpose(0,1).reshape(1,-1,F), axis=1, keepdims=True))
+            mean.append(np.mean(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True).transpose(0,1,-1))
+            std.append(np.std(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True).transpose(0,1,-1))
         mean = np.stack(mean)[None, ...]
         std = np.stack(std)[None, ...]
         print(mean.shape)
