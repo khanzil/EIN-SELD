@@ -173,8 +173,8 @@ class Preprocessor:
         for ch in range(C):
             mean.append(np.mean(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
             std.append(np.std(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
-        mean = np.stack(mean)
-        std = np.stack(std)
+        mean = np.stack(mean).transpose(1,0,-1)
+        std = np.stack(std).transpose(1,0,-1)
         print(mean.shape)
 
         # save to h5py
