@@ -173,7 +173,7 @@ class Preprocessor:
 
         feature_dir = self.scalar_h5_dir.joinpath('foa')
         feature_dir.mkdir(exist_ok=True)
-        
+
         for count, fn in enumerate(data_list):
             fn = "{}.h5".format(fn)
             file_dir = feature_dir.joinpath(fn)
@@ -183,8 +183,8 @@ class Preprocessor:
         for ch in range(C):
             mean.append(np.mean(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
             std.append(np.std(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
-        mean = np.stack(mean).transpose(1,0,-1)
-        std = np.stack(std).transpose(1,0,-1)
+        mean = np.stack(mean).transpose(1,0,2,3)
+        std = np.stack(std).transpose(1,0,2,3)
         print(mean.shape)
 
         # save to h5py
