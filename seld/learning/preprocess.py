@@ -171,9 +171,12 @@ class Preprocessor:
 
         data_list = [path.stem for path in sorted(self.data_dir_list[0].glob('*.wav')) if not path.name.startswith('.')]
 
+        feature_dir = self.scalar_h5_dir.joinpath('foa')
+        feature_dir.mkdir(exist_ok=True)
+        
         for count, fn in enumerate(data_list):
             fn = "{}.h5".format(fn)
-            file_dir = self.scalar_h5_dir.joinpath('foa', fn)
+            file_dir = feature_dir.joinpath(fn)
             with h5py.File(file_dir, 'w') as hf:
                 hf.create_dataset(name='feature', data=features[count,...], dtype=np.float32)
 
