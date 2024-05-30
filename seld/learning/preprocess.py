@@ -67,13 +67,13 @@ class Preprocessor:
         print('Converting wav file to hdf5 file starts......\n')
         
         for h5_dir in self.data_h5_dir_list:
-            if h5_dir.is_dir():
-                flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
-                if flag == 'y':
-                    shutil.rmtree(h5_dir)
-                elif flag == 'n':
-                    print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
-                    return
+            # if h5_dir.is_dir():
+            #     flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
+            #     if flag == 'y':
+            #         shutil.rmtree(h5_dir)
+            #     elif flag == 'n':
+            #         print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
+            #         return
             h5_dir.mkdir(parents=True, exist_ok=True)
         for statistic_path in self.data_statistics_path_list:
             if statistic_path.is_file():
@@ -140,7 +140,7 @@ class Preprocessor:
         )
         af_extractor = get_afextractor(self.cfg, cuda_enabled).eval()
         iterator = tqdm(enumerate(data_generator), total=len(data_generator), unit='it')
-        features = np.array([])
+        features = []
         begin_time = timer()
 
         # for it, batch_sample in iterator:
@@ -163,7 +163,7 @@ class Preprocessor:
                 batch_x = batch_x.cuda(non_blocking=True)
             batch_y = af_extractor(batch_x)
             _, C, _, F = batch_y.shape
-            features.append(batch_y.cpu().numpy(), axis=0)
+            features.append(batch_y.cpu().numpy())
         iterator.close()
         print(features.shape)
         features = np.concatenate(features, axis=0)
