@@ -14,7 +14,6 @@ from tqdm import tqdm
 from utils.common import float_samples_to_int16
 from utils.config import get_afextractor
 
-
 class Preprocessor:
     """Preprocess the audio data.
 
@@ -169,6 +168,13 @@ class Preprocessor:
         print(features.shape)
         mean = []
         std = []
+
+        data_list = [path for path in sorted(self.data_dir_list[0].glob('*.wav')) if not path.name.startswith('.')]
+
+        for count, fn in enumerate(data_list):
+            file_dir = self.scalar_path.joinpath('foa', fn)
+            with h5py.File(file_dir, 'w') as hf:
+                hf.create_dataset(name='feature', data=features[count,...], dtype=np.float32)
 
         for ch in range(C):
             mean.append(np.mean(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
