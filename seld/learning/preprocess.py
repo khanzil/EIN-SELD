@@ -74,7 +74,7 @@ class Preprocessor:
                 elif flag == 'n':
                     print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
                     return
-            h5_dir.mkdir(parents=True)
+            h5_dir.mkdir(parents=True, exist_ok=True)
         for statistic_path in self.data_statistics_path_list:
             if statistic_path.is_file():
                 statistic_path.unlink()
