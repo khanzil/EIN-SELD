@@ -15,7 +15,7 @@ class Trainer(BaseTrainer):
 
         super().__init__()
         self.cfg = cfg
-        self.af_extractor = af_extractor
+        # self.af_extractor = af_extractor
         self.model = model
         self.optimizer = optimizer
         self.losses = losses
@@ -60,7 +60,7 @@ class Trainer(BaseTrainer):
         """ 
             Perform a train step
         """
-        batch_x = batch_sample.batch_out_dict['waveform']
+        batch_x = batch_sample.batch_out_dict['feature']
         batch_target = {
             'ov': batch_sample.batch_out_dict['ov'],
             'sed': batch_sample.batch_out_dict['sed_label'],
@@ -72,23 +72,25 @@ class Trainer(BaseTrainer):
             batch_target['doa'] = batch_target['doa'].cuda(non_blocking=True)
 
         self.optimizer.zero_grad()
-        self.af_extractor.train()
+        # self.af_extractor.train()
         self.model.train()
-        batch_x = self.af_extractor(batch_x)
-        batch_x = (batch_x - self.mean) / self.std
-
-        acs = AudioChannelSwapping()
-        specaug = SpecAug()
-        rc = RandomCutoff()
-        fs = FrequencyShifting()
+        # batch_x = self.af_extractor(batch_x)
+        if self.mean.shape[0] < batch_x.shape[1]:
+            batch_x[:,:self.mean.shape[0],:,:] = (batch_x[:,:self.mean.shape[0],:,:] - self.mean) / self.std
+        else:
+            batch_x = (batch_x - self.mean) / self.std
+        # acs = AudioChannelSwapping()
+        # specaug = SpecAug()
+        # rc = RandomCutoff()
+        # fs = FrequencyShifting()
  
-        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
-        batch_x = fs(batch_x)
-        p = np.random.rand()
-        if p<0.33:
-            batch_x = specaug(batch_x)
-        elif p<0.67:
-            batch_x = rc(batch_x)
+        # batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        # batch_x = fs(batch_x)
+        # p = np.random.rand()
+        # if p<0.33:
+        #     batch_x = specaug(batch_x)
+        # elif p<0.67:
+        #     batch_x = rc(batch_x)
 
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)

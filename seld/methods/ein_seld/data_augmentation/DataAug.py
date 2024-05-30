@@ -56,7 +56,7 @@ class RandomCutoff(nn.Module):
     def forward(self, x):
         '''
         input: 
-            x (Tensor): feature channels, size (channel x freq x time)
+            x (Tensor): feature channels, size (channel x time x freq)
         output:
             y (Tensor): T-F masked x, same size as x, last 3 channel is not masked
         '''
@@ -85,7 +85,7 @@ class AudioChannelSwapping(nn.Module):
         '''
         input:
             x (Tensor): features channels, size (batch x channel x time x freq)
-            gt_list: ground truth label of x, tensor size (batch,frame,track,x,y,z)
+            gt_list: ground truth label of x, tensor size (batch,frame,track,[x,y,z])
             format: audio format
         output:
             y (Tensor): swapped channels, same size as x
@@ -184,7 +184,7 @@ class FrequencyShifting(nn.Module):
     def forward(self, x):
         '''
         input:
-            x (Tensor): features channels, size (channel x freq x time)
+            x (Tensor): features channels, size (channel x time x freq)
         output:
             y (Tensor): shifted frequency channels
         ''' 

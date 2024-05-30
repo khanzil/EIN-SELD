@@ -142,6 +142,18 @@ class Preprocessor:
         iterator = tqdm(enumerate(data_generator), total=len(data_generator), unit='it')
         features = []
         begin_time = timer()
+
+        # for it, batch_sample in iterator:
+        #     if it == len(data_generator):
+        #         break
+        #     batch_x = batch_sample.batch_out_dict['waveform']
+        #     batch_x.require_grad = False
+        #     if cuda_enabled:
+        #         batch_x = batch_x.cuda(non_blocking=True)
+        #     batch_y = af_extractor(batch_x).transpose(0, 1)
+        #     C, _, _, F = batch_y.shape
+        #     features.append(batch_y.reshape(C, -1, F).cpu().numpy())
+        
         for it, batch_sample in iterator:
             if it == len(data_generator):
                 break
@@ -149,11 +161,11 @@ class Preprocessor:
             batch_x.require_grad = False
             if cuda_enabled:
                 batch_x = batch_x.cuda(non_blocking=True)
-            batch_y = af_extractor(batch_x).transpose(0, 1)
-            C, _, _, F = batch_y.shape
-            features.append(batch_y.reshape(C, -1, F).cpu().numpy())
+            batch_y = af_extractor(batch_x)
+            features.append(batch_y.cpu().numpy(), axis=0)
         iterator.close()
         features = np.concatenate(features, axis=1)
+        print(features.shape)
         mean = []
         std = []
 

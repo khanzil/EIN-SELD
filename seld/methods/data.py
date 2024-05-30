@@ -38,7 +38,7 @@ class BaseDataset(Dataset):
         self.data_dir = main_data_dir.joinpath('dev').joinpath(cfg['data']['type'])
         self.fn_list = [path.stem for path in sorted(self.data_dir.glob('*.h5')) \
             if not path.name.startswith('.')]           
-        self.fn_list = [fn + '%' + str(n) for fn in self.fn_list for n in range(self.num_segments)]
+        # self.fn_list = [fn + '%' + str(n) for fn in self.fn_list for n in range(self.num_segments)]
 
     def __len__(self):
         """Get length of the dataset
@@ -50,17 +50,17 @@ class BaseDataset(Dataset):
         """
         Read features from the dataset
         """
-        fn_segment = self.fn_list[idx]
-        fn, n_segment = fn_segment.split('%')[0], int(fn_segment.split('%')[1])
+        fn = self.fn_list[idx]
+        # fn, n_segment = fn_segment.split('%')[0], int(fn_segment.split('%')[1])
         data_path = self.data_dir.joinpath(fn + '.h5')
-        index_begin = self.segmented_indexes[n_segment][0]
-        index_end = self.segmented_indexes[n_segment][1]
-        pad_width_before = self.segmented_pad_width[n_segment][0]
-        pad_width_after = self.segmented_pad_width[n_segment][1]
+        # index_begin = self.segmented_indexes[n_segment][0]
+        # index_end = self.segmented_indexes[n_segment][1]
+        # pad_width_before = self.segmented_pad_width[n_segment][0]
+        # pad_width_after = self.segmented_pad_width[n_segment][1]
         with h5py.File(data_path, 'r') as hf:
-            x = int16_samples_to_float32(hf['waveform'][:, index_begin: index_end])
-        pad_width = ((0, 0), (pad_width_before, pad_width_after))                    
-        x = np.pad(x, pad_width, mode='constant')
+            x = int16_samples_to_float32(hf['waveform']) # [:, index_begin: index_end])
+        # pad_width = ((0, 0), (pad_width_before, pad_width_after))                    
+        # x = np.pad(x, pad_width, mode='constant')
         sample = {
             'waveform': x
         }

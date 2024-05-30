@@ -127,8 +127,8 @@ class UserDataset(Dataset):
                 pad_width_before = self.segmented_pad_width[n_segment][0]
                 pad_width_after = self.segmented_pad_width[n_segment][1]
                 with h5py.File(data_path, 'r') as hf:
-                    x = int16_samples_to_float32(hf['waveform'][:, index_begin: index_end])
-                pad_width = ((0, 0), (pad_width_before, pad_width_after))                    
+                    x = hf['feature'][:, index_begin: index_end, :]
+                pad_width = ((0, 0), (pad_width_before, pad_width_after), (0, 0))                    
                 x = np.pad(x, pad_width, mode='constant')
                 if 'test' not in self.dataset_type:
                     ov = fn[-1]
@@ -149,7 +149,7 @@ class UserDataset(Dataset):
                         'filename': fn,
                         'n_segment': n_segment,
                         'ov': ov,
-                        'waveform': x,
+                        'feature': x,
                         'sed_label': sed_label,
                         'doa_label': doa_label
                     })
@@ -157,7 +157,7 @@ class UserDataset(Dataset):
                     self.dataset_list.append({
                         'filename': fn,
                         'n_segment': n_segment,
-                        'waveform': x
+                        'feature': x
                     })
             iterator.close()
             print('Loading dataset time: {:.3f}\n'.format(timer()-load_begin_time))
@@ -176,7 +176,7 @@ class UserDataset(Dataset):
             data_dict = self.dataset_list[idx]
             fn = data_dict['filename']
             n_segment = data_dict['n_segment']
-            x = data_dict['waveform']
+            x = data_dict['feature']
             if 'test' not in self.dataset_type:
                 ov = data_dict['ov']
                 sed_label = data_dict['sed_label']
@@ -190,8 +190,8 @@ class UserDataset(Dataset):
             pad_width_before = self.segmented_pad_width[n_segment][0]
             pad_width_after = self.segmented_pad_width[n_segment][1]
             with h5py.File(data_path, 'r') as hf:
-                x = int16_samples_to_float32(hf['waveform'][:, index_begin: index_end])
-            pad_width = ((0, 0), (pad_width_before, pad_width_after))                    
+                x = hf['feature'][:, index_begin: index_end, :] 
+            pad_width = ((0, 0), (pad_width_before, pad_width_after), (0, 0))                    
             x = np.pad(x, pad_width, mode='constant')
             if 'test' not in self.dataset_type:
                 ov = fn[-1]
@@ -214,7 +214,7 @@ class UserDataset(Dataset):
                 'filename': fn,
                 'n_segment': n_segment,
                 'ov': ov,
-                'waveform': x,
+                'feature': x,
                 'sed_label': sed_label,
                 'doa_label': doa_label
             }
@@ -222,7 +222,7 @@ class UserDataset(Dataset):
             sample = {
                 'filename': fn,
                 'n_segment': n_segment,
-                'waveform': x
+                'feature': x
             }
           
         return sample    
@@ -285,7 +285,7 @@ class PinMemCustomBatch:
             batch_fn.append(batch_dict[n]['filename'])
             batch_n_segment.append(batch_dict[n]['n_segment'])
             batch_ov.append(batch_dict[n]['ov'])
-            batch_x.append(batch_dict[n]['waveform'])
+            batch_x.append(batch_dict[n]['feature'])
             batch_sed_label.append(batch_dict[n]['sed_label'])
             batch_doa_label.append(batch_dict[n]['doa_label'])
 
@@ -293,13 +293,13 @@ class PinMemCustomBatch:
             'filename': batch_fn,
             'n_segment': batch_n_segment,
             'ov': batch_ov,
-            'waveform': torch.tensor(batch_x, dtype=torch.float32),
+            'feature': torch.tensor(batch_x, dtype=torch.float32),
             'sed_label': torch.tensor(batch_sed_label, dtype=torch.float32),
             'doa_label': torch.tensor(batch_doa_label, dtype=torch.float32),
         }
 
     def pin_memory(self):
-        self.batch_out_dict['waveform'] = self.batch_out_dict['waveform'].pin_memory()
+        self.batch_out_dict['feature'] = self.batch_out_dict['feature'].pin_memory()
         self.batch_out_dict['sed_label'] = self.batch_out_dict['sed_label'].pin_memory()
         self.batch_out_dict['doa_label'] = self.batch_out_dict['doa_label'].pin_memory()
         return self.batch_out_dict
@@ -322,16 +322,16 @@ class PinMemCustomBatchTest:
         for n in range(len(batch_dict)):
             batch_fn.append(batch_dict[n]['filename'])
             batch_n_segment.append(batch_dict[n]['n_segment'])
-            batch_x.append(batch_dict[n]['waveform'])
+            batch_x.append(batch_dict[n]['feature'])
 
         self.batch_out_dict = {
             'filename': batch_fn,
             'n_segment': batch_n_segment,
-            'waveform': torch.tensor(batch_x, dtype=torch.float32)
+            'feature': torch.tensor(batch_x, dtype=torch.float32)
         }
 
     def pin_memory(self):
-        self.batch_out_dict['waveform'] = self.batch_out_dict['waveform'].pin_memory()
+        self.batch_out_dict['feature'] = self.batch_out_dict['feature'].pin_memory()
         return self.batch_out_dict
 
 
