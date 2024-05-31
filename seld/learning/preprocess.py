@@ -170,7 +170,7 @@ class Preprocessor:
             features.append(batch_y.cpu().numpy())
         iterator.close()
         features = np.concatenate(features, axis=0)
-        print(features.shape)
+
         mean = []
         std = []
 
@@ -189,7 +189,6 @@ class Preprocessor:
             std.append(np.std(features[:,ch,...].reshape(1,-1,F), axis=1, keepdims=True))
         mean = np.stack(mean).transpose(1,0,2,3)
         std = np.stack(std).transpose(1,0,2,3)
-        print(mean.shape)
 
         # save to h5py
         with h5py.File(self.scalar_path, 'w') as hf:
