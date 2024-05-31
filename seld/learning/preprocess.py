@@ -71,13 +71,13 @@ class Preprocessor:
         print('Converting wav file to hdf5 file starts......\n')
         
         for h5_dir in self.data_h5_dir_list:
-            if h5_dir.is_dir():
-                flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
-                if flag == 'y':
-                    shutil.rmtree(h5_dir)
-                elif flag == 'n':
-                    print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
-                    return
+            # if h5_dir.is_dir():
+            #     flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
+            #     if flag == 'y':
+            #         shutil.rmtree(h5_dir)
+            #     elif flag == 'n':
+            #         print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
+            #         return
             h5_dir.mkdir(parents=True, exist_ok=True)
         for statistic_path in self.data_statistics_path_list:
             if statistic_path.is_file():
@@ -177,7 +177,7 @@ class Preprocessor:
         data_list = [path.stem for path in sorted(self.data_dir_list[0].glob('*.wav')) if not path.name.startswith('.')]
 
         feature_dir = self.feature_h5_dir_list[0]
-        feature_dir.mkdir(exist_ok=True)
+        feature_dir.mkdir(parents=True, exist_ok=True)
 
         for count, fn in enumerate(data_list):
             file_dir = feature_dir.joinpath(fn + '.h5')
