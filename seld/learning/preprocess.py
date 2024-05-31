@@ -44,6 +44,11 @@ class Preprocessor:
             data_h5_dir.joinpath(args.dataset_type).joinpath('foa'),
             data_h5_dir.joinpath(args.dataset_type).joinpath('mic')            
         ]
+        feature_h5_dir = hdf5_dir.joinpath('feature').joinpath('{}fs'.format(cfg['data']['sample_rate']))
+        self.feature_h5_dir_list = [
+            feature_h5_dir.joinpath(args.dataset_type).joinpath('foa'),
+            feature_h5_dir.joinpath(args.dataset_type).joinpath('mic')            
+        ]
         self.data_statistics_path_list = [
             data_h5_dir.joinpath(args.dataset_type).joinpath('statistics_foa.txt'),
             data_h5_dir.joinpath(args.dataset_type).joinpath('statistics_mic.txt')
@@ -66,13 +71,13 @@ class Preprocessor:
         print('Converting wav file to hdf5 file starts......\n')
         
         for h5_dir in self.data_h5_dir_list:
-            # if h5_dir.is_dir():
-            #     flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
-            #     if flag == 'y':
-            #         shutil.rmtree(h5_dir)
-            #     elif flag == 'n':
-            #         print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
-            #         return
+            if h5_dir.is_dir():
+                flag = input("HDF5 folder {} is already existed, delete it? (y/n)".format(h5_dir)).lower()
+                if flag == 'y':
+                    shutil.rmtree(h5_dir)
+                elif flag == 'n':
+                    print("User select not to remove the HDF5 folder {}. The process will quit.\n".format(h5_dir))
+                    return
             h5_dir.mkdir(parents=True, exist_ok=True)
         for statistic_path in self.data_statistics_path_list:
             if statistic_path.is_file():
@@ -171,12 +176,11 @@ class Preprocessor:
 
         data_list = [path.stem for path in sorted(self.data_dir_list[0].glob('*.wav')) if not path.name.startswith('.')]
 
-        feature_dir = self.scalar_h5_dir.joinpath('foa')
+        feature_dir = self.feature_h5_dir_list[0]
         feature_dir.mkdir(exist_ok=True)
 
         for count, fn in enumerate(data_list):
-            fn = "{}.h5".format(fn)
-            file_dir = feature_dir.joinpath(fn)
+            file_dir = feature_dir.joinpath(fn + '.h5')
             with h5py.File(file_dir, 'w') as hf:
                 hf.create_dataset(name='feature', data=features[count,...], dtype=np.float32)
 
@@ -192,7 +196,7 @@ class Preprocessor:
             hf.create_dataset(name='mean', data=mean, dtype=np.float32)
             hf.create_dataset(name='std', data=std, dtype=np.float32)
         print("\nScalar saved to {}\n".format(str(self.scalar_path)))
-        print("Extacting scalar finished! Time spent: {:.3f} s\n".format(timer() - begin_time))
+        print("Extracting scalar finished! Time spent: {:.3f} s\n".format(timer() - begin_time))
 
     def extract_meta(self):
         """ Extract meta .csv file and re-organize the meta data and store it to hdf5 file.
