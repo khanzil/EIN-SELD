@@ -134,9 +134,9 @@ class Trainer(BaseTrainer):
                     batch_target['doa'] = batch_target['doa'].cuda(non_blocking=True)
 
                 with torch.no_grad():
-                    self.af_extractor.eval()
+                    # self.af_extractor.eval()
                     self.model.eval()
-                    batch_x = self.af_extractor(batch_x)
+                    # batch_x = self.af_extractor(batch_x)
                     batch_x = (batch_x - self.mean) / self.std
                     pred = self.model(batch_x)
                 loss_dict = self.losses.calculate(pred, batch_target, epoch_it)
