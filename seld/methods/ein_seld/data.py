@@ -29,20 +29,21 @@ class UserDataset(Dataset):
         self.dataset_type = dataset_type
         self.read_into_mem = args.read_into_mem
         self.sample_rate = cfg['data']['sample_rate']
+        self.data_hop_length = cfg['data']['hop_length']
         self.clip_length = dataset.clip_length
         self.label_resolution = dataset.label_resolution
         self.frame_length = int(self.clip_length / self.label_resolution)
-        self.label_interp_ratio = int(self.label_resolution * self.sample_rate / cfg['data']['hop_length'])
+        self.label_interp_ratio = int(self.label_resolution * self.sample_rate / self.data_hop_length)
 
         # Chunklen and hoplen and segmentation. Since all of the clips are 60s long, it only segments once here
-        data = np.zeros((1, int(self.clip_length * self.sample_rate / cfg['data']['hop_length'])))
+        data = np.zeros((1, int(self.clip_length * self.sample_rate / self.data_hop_length)))
         if 'train' in self.dataset_type:
-            chunklen = int(cfg['data']['train_chunklen_sec'] * self.sample_rate / cfg['data']['hop_length'])     
-            hoplen = int(cfg['data']['train_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
+            chunklen = int(cfg['data']['train_chunklen_sec'] * self.sample_rate / self.data_hop_length)     
+            hoplen = int(cfg['data']['train_hoplen_sec'] * self.sample_rate / self.data_hop_length)
             self.segmented_indexes, self.segmented_pad_width = _segment_index(data, chunklen, hoplen)
         elif self.dataset_type in ['valid', 'dev_test', 'eval_test']:
-            chunklen = int(cfg['data']['test_chunklen_sec'] * self.sample_rate / cfg['data']['hop_length'])
-            hoplen = int(cfg['data']['test_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
+            chunklen = int(cfg['data']['test_chunklen_sec'] * self.sample_rate / self.data_hop_length)
+            hoplen = int(cfg['data']['test_hoplen_sec'] * self.sample_rate / self.data_hop_length)
             self.segmented_indexes, self.segmented_pad_width = _segment_index(data, chunklen, hoplen, last_frame_always_paddding=True)
         self.num_segments = len(self.segmented_indexes)
 
@@ -132,10 +133,10 @@ class UserDataset(Dataset):
                 x = np.pad(x, pad_width, mode='constant')
                 if 'test' not in self.dataset_type:
                     ov = fn[-1]
-                    index_begin_label = int(index_begin / (self.sample_rate * self.label_resolution))
-                    index_end_label = int(index_end / (self.sample_rate * self.label_resolution))
-                    # pad_width_before_label = int(pad_width_before / (self.sample_rate * self.label_resolution))
-                    pad_width_after_label = int(pad_width_after / (self.sample_rate * self.label_resolution))
+                    index_begin_label = int(index_begin / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                    index_end_label = int(index_end / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                    # pad_width_before_label = int(pad_width_before / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                    pad_width_after_label = int(pad_width_after / (self.sample_rate / self.data_hop_length * self.label_resolution))
                     meta_path = self.meta_dir.joinpath(fn + '.h5')
                     with h5py.File(meta_path, 'r') as hf:
                         sed_label = hf['sed_label'][index_begin_label: index_end_label, ...]
@@ -195,10 +196,10 @@ class UserDataset(Dataset):
             x = np.pad(x, pad_width, mode='constant')
             if 'test' not in self.dataset_type:
                 ov = fn[-1]
-                index_begin_label = int(index_begin / (self.sample_rate * self.label_resolution))
-                index_end_label = int(index_end / (self.sample_rate * self.label_resolution))
-                # pad_width_before_label = int(pad_width_before / (self.sample_rate * self.label_resolution))
-                pad_width_after_label = int(pad_width_after / (self.sample_rate * self.label_resolution))
+                index_begin_label = int(index_begin / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                index_end_label = int(index_end / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                # pad_width_before_label = int(pad_width_before / (self.sample_rate / self.data_hop_length * self.label_resolution))
+                pad_width_after_label = int(pad_width_after / (self.sample_rate / self.data_hop_length * self.label_resolution))
                 meta_path = self.meta_dir.joinpath(fn + '.h5')
                 with h5py.File(meta_path, 'r') as hf:
                     sed_label = hf['sed_label'][index_begin_label: index_end_label, ...]
