@@ -45,7 +45,7 @@ class UserDataset(Dataset):
             hoplen = int(cfg['data']['test_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
             self.segmented_indexes, self.segmented_pad_width = _segment_index(data, chunklen, hoplen, last_frame_always_paddding=True)
         self.num_segments = len(self.segmented_indexes)
-
+        print(self.segmented_indexes)
         # Data and meta path
         fold_str_idx = dataset.fold_str_index
         ov_str_idx = dataset.ov_str_index
