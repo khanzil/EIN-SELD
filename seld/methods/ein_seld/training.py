@@ -75,8 +75,8 @@ class Trainer(BaseTrainer):
         # self.af_extractor.train()
         self.model.train()
         # batch_x = self.af_extractor(batch_x)
-        if self.mean.shape[0] < batch_x.shape[1]:
-            batch_x[:,:self.mean.shape[0],:,:] = (batch_x[:,:self.mean.shape[0],:,:] - self.mean) / self.std
+        if self.mean.shape[1] < batch_x.shape[1]:
+            batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
         else:
             batch_x = (batch_x - self.mean) / self.std
         # acs = AudioChannelSwapping()
