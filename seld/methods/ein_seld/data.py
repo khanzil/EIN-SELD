@@ -282,7 +282,7 @@ class PinMemCustomBatch:
         batch_doa_label = []
         
         for n in range(len(batch_dict)):
-            print("{}, {}, {}, ".format(batch_dict[n]['feature'].shape, batch_dict[n]['filename'], batch_dict[n]['n_segment']))
+            print("{}, {}, {}, ".format(batch_dict[n]['sed_label'].shape, batch_dict[n]['filename'], batch_dict[n]['n_segment']))
             batch_fn.append(batch_dict[n]['filename'])
             batch_n_segment.append(batch_dict[n]['n_segment'])
             batch_ov.append(batch_dict[n]['ov'])
