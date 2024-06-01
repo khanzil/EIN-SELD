@@ -35,7 +35,7 @@ class UserDataset(Dataset):
         self.label_interp_ratio = int(self.label_resolution * self.sample_rate / cfg['data']['hop_length'])
 
         # Chunklen and hoplen and segmentation. Since all of the clips are 60s long, it only segments once here
-        data = np.zeros((1, self.clip_length * self.sample_rate / cfg['data']['hop_length']))
+        data = np.zeros((1, int(self.clip_length * self.sample_rate / cfg['data']['hop_length'])))
         if 'train' in self.dataset_type:
             chunklen = int(cfg['data']['train_chunklen_sec'] * self.sample_rate / cfg['data']['hop_length'])     
             hoplen = int(cfg['data']['train_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
