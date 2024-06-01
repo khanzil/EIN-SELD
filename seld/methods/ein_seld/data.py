@@ -35,14 +35,14 @@ class UserDataset(Dataset):
         self.label_interp_ratio = int(self.label_resolution * self.sample_rate / cfg['data']['hop_length'])
 
         # Chunklen and hoplen and segmentation. Since all of the clips are 60s long, it only segments once here
-        data = np.zeros((1, int(self.clip_length * self.sample_rate)))
+        data = np.zeros((1, int(self.clip_length * self.sample_rate / cfg['data']['hop_length'])))
         if 'train' in self.dataset_type:
-            chunklen = int(cfg['data']['train_chunklen_sec'] * self.sample_rate)     
-            hoplen = int(cfg['data']['train_hoplen_sec'] * self.sample_rate)
+            chunklen = int(cfg['data']['train_chunklen_sec'] * self.sample_rate / cfg['data']['hop_length'])     
+            hoplen = int(cfg['data']['train_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
             self.segmented_indexes, self.segmented_pad_width = _segment_index(data, chunklen, hoplen)
         elif self.dataset_type in ['valid', 'dev_test', 'eval_test']:
-            chunklen = int(cfg['data']['test_chunklen_sec'] * self.sample_rate)
-            hoplen = int(cfg['data']['test_hoplen_sec'] * self.sample_rate)
+            chunklen = int(cfg['data']['test_chunklen_sec'] * self.sample_rate / cfg['data']['hop_length'])
+            hoplen = int(cfg['data']['test_hoplen_sec'] * self.sample_rate / cfg['data']['hop_length'])
             self.segmented_indexes, self.segmented_pad_width = _segment_index(data, chunklen, hoplen, last_frame_always_paddding=True)
         self.num_segments = len(self.segmented_indexes)
 
@@ -50,7 +50,7 @@ class UserDataset(Dataset):
         fold_str_idx = dataset.fold_str_index
         ov_str_idx = dataset.ov_str_index
         data_sr_folder_name = '{}fs'.format(self.sample_rate)
-        main_data_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('data').joinpath(data_sr_folder_name)
+        main_data_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('feature').joinpath(data_sr_folder_name)
         dev_data_dir = main_data_dir.joinpath('dev').joinpath(cfg['data']['type'])
         eval_data_dir = main_data_dir.joinpath('eval').joinpath(cfg['data']['type'])
         main_meta_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('meta')
