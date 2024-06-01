@@ -50,7 +50,7 @@ class UserDataset(Dataset):
         fold_str_idx = dataset.fold_str_index
         ov_str_idx = dataset.ov_str_index
         data_sr_folder_name = '{}fs'.format(self.sample_rate)
-        main_data_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('feature').joinpath(data_sr_folder_name)
+        main_data_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('data').joinpath(data_sr_folder_name)
         dev_data_dir = main_data_dir.joinpath('dev').joinpath(cfg['data']['type'])
         eval_data_dir = main_data_dir.joinpath('eval').joinpath(cfg['data']['type'])
         main_meta_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('meta')
