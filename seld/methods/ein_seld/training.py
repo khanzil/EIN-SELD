@@ -33,7 +33,7 @@ class Trainer(BaseTrainer):
         self.gt_metrics2020_dict = valid_set.gt_metrics2020_dict
 
         # Scalar
-        scalar_h5_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('scalar')
+        scalar_h5_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('feature')
         fn_scalar = '{}_{}_sr{}_nfft{}_hop{}_mel{}.h5'.format(cfg['data']['type'], cfg['data']['audio_feature'], 
             cfg['data']['sample_rate'], cfg['data']['n_fft'], cfg['data']['hop_length'], cfg['data']['n_mels'])
         scalar_path = scalar_h5_dir.joinpath(fn_scalar)
@@ -122,7 +122,7 @@ class Trainer(BaseTrainer):
                 if batch_idx == max_batch_num:
                     break
 
-                batch_x = batch_sample.batch_out_dict['waveform']
+                batch_x = batch_sample.batch_out_dict['feature']
                 batch_target = {
                     'sed': batch_sample.batch_out_dict['sed_label'],
                     'doa': batch_sample.batch_out_dict['doa_label']
