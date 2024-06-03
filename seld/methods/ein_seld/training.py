@@ -74,13 +74,14 @@ class Trainer(BaseTrainer):
             batch_x = batch_x.cuda(non_blocking=True)
             batch_target['sed'] = batch_target['sed'].cuda(non_blocking=True)
             batch_target['doa'] = batch_target['doa'].cuda(non_blocking=True)
+        print(self.mean.shape)
+        print(batch_x.shape)
 
         self.optimizer.zero_grad()
         # self.af_extractor.train()
         self.model.train()
         # batch_x = self.af_extractor(batch_x)
-        print(self.mean.shape[1])
-        print(batch_x.shape[1])
+
         if self.mean.shape[1] < batch_x.shape[1]:
             batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
         else:
