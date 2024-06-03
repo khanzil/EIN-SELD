@@ -85,7 +85,7 @@ class Trainer(BaseTrainer):
         rc = RandomCutoff()
         fs = FrequencyShifting()
  
-        # batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
         batch_x = fs(batch_x)
         p = np.random.rand()
         if p<0.33:
