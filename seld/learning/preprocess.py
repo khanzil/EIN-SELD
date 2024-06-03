@@ -180,9 +180,10 @@ class Preprocessor:
         std = np.stack(std).transpose(1,0,2,3)
 
         # save to h5py
-        with h5py.File(self.scalar_path, 'w') as hf:
-            hf.create_dataset(name='mean', data=mean, dtype=np.float32)
-            hf.create_dataset(name='std', data=std, dtype=np.float32)
+        if self.dataset_type == 'dev':
+            with h5py.File(self.scalar_path, 'w') as hf:
+                hf.create_dataset(name='mean', data=mean, dtype=np.float32)
+                hf.create_dataset(name='std', data=std, dtype=np.float32)
         print("\nScalar saved to {}\n".format(str(self.scalar_path)))
         print("Extracting scalar finished! Time spent: {:.3f} s\n".format(timer() - begin_time))
 
