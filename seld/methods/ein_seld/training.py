@@ -79,18 +79,19 @@ class Trainer(BaseTrainer):
             batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
         else:
             batch_x = (batch_x - self.mean) / self.std
-        # acs = AudioChannelSwapping()
-        # specaug = SpecAug()
-        # rc = RandomCutoff()
-        # fs = FrequencyShifting()
+        
+        acs = AudioChannelSwapping()
+        specaug = SpecAug()
+        rc = RandomCutoff()
+        fs = FrequencyShifting()
  
         # batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
-        # batch_x = fs(batch_x)
-        # p = np.random.rand()
-        # if p<0.33:
-        #     batch_x = specaug(batch_x)
-        # elif p<0.67:
-        #     batch_x = rc(batch_x)
+        batch_x = fs(batch_x)
+        p = np.random.rand()
+        if p<0.33:
+            batch_x = specaug(batch_x)
+        elif p<0.67:
+            batch_x = rc(batch_x)
 
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
