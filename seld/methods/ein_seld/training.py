@@ -40,6 +40,10 @@ class Trainer(BaseTrainer):
         with h5py.File(scalar_path, 'r') as hf:
             self.mean = hf['mean'][:]
             self.std = hf['std'][:]
+        if len(self.mean.shape) == 3:
+            self.mean = self.mean[None,:]
+            self.std = self.std[None,:]
+
         if args.cuda:
             self.mean = torch.tensor(self.mean, dtype=torch.float32).cuda()
             self.std = torch.tensor(self.std, dtype=torch.float32).cuda()

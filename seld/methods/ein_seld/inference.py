@@ -112,5 +112,5 @@ class Inferer(BaseInferer):
             pred_dcase_format_dict = to_dcase_format(pred_sed_f, pred_doa_f)
             csv_path = submissions_dir.joinpath(fn + '.csv')
             self.write_submission(csv_path, pred_dcase_format_dict)
-        print('Rsults are saved to {}\n'.format(str(submissions_dir)))
+        print('Results are saved to {}\n'.format(str(submissions_dir)))
 
