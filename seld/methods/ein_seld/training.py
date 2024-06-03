@@ -79,6 +79,8 @@ class Trainer(BaseTrainer):
         # self.af_extractor.train()
         self.model.train()
         # batch_x = self.af_extractor(batch_x)
+        print(self.mean.shape[1])
+        print(batch_x.shape[1])
         if self.mean.shape[1] < batch_x.shape[1]:
             batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
         else:
