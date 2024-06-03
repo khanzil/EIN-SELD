@@ -97,7 +97,7 @@ class AudioChannelSwapping(nn.Module):
         y = x
         y_gt_list = gt_list
         if format == 'foa':
-            rot_azi = torch.randint(0, 8)
+            rot_azi = torch.randint(0, 8, (1,))[0]
             if rot_azi == 0:
                 y[:,[1, 3, 4, 6],:,:] = x[:,[3, 1, 6, 4],:,:] # swap channels
                 y[:,[1, 4],:,:] *= -1
@@ -134,7 +134,7 @@ class AudioChannelSwapping(nn.Module):
 
                 y_gt_list[:,:,0] = -gt_list[:,:,0]  
 
-            rot_ele = torch.randint(0,2)
+            rot_ele = torch.randint(0, 2, (1,))[0]
             if rot_ele == 0:
                 pass
             elif rot_ele == 1:
@@ -142,33 +142,33 @@ class AudioChannelSwapping(nn.Module):
 
                 y_gt_list[:,:,:,2] = -gt_list[:,:,:,2]
         # elif format == 'mic':
-            rot = torch.randint(0, 8)
-            if rot == 0:
-                y = x[[2, 4, 1, 3],:]
-                y_gt_list[:,:,3] -= 90
-                y_gt_list[:,4] *= -1 
-            elif rot == 1:
-                y = x[[4, 2, 3, 1],:]
-                y_gt_list[:,3] = -gt_list[:,3]-90
-            elif rot == 2:
-                pass
-            elif rot == 3:
-                y = x[[2, 1, 4, 3],:]
-                y_gt_list[:,[3,4]] *= -1
-            elif rot == 4:
-                y = x[[3, 1, 4, 2],:]
-                y_gt_list[:,3] += 90
-                y_gt_list[:,4] *= -1
-            elif rot == 5:
-                y = x[[1, 3, 2, 4],:]
-                y_gt_list[:,3] = -gt_list[:,3]+90
-            elif rot == 6:
-                y = x[[4, 3, 2, 1],:]
-                y_gt_list[:,3] += 90
-            elif rot == 7:
-                y = x[[3, 4, 1, 2],:]
-                y_gt_list[:,[3,4]] *= -1
-                y_gt_list[:,3] += 180
+            # rot = torch.randint(0, 8, (1,))[0]
+            # if rot == 0:
+            #     y = x[[2, 4, 1, 3],:]
+            #     y_gt_list[:,:,3] -= 90
+            #     y_gt_list[:,4] *= -1 
+            # elif rot == 1:
+            #     y = x[[4, 2, 3, 1],:]
+            #     y_gt_list[:,3] = -gt_list[:,3]-90
+            # elif rot == 2:
+            #     pass
+            # elif rot == 3:
+            #     y = x[[2, 1, 4, 3],:]
+            #     y_gt_list[:,[3,4]] *= -1
+            # elif rot == 4:
+            #     y = x[[3, 1, 4, 2],:]
+            #     y_gt_list[:,3] += 90
+            #     y_gt_list[:,4] *= -1
+            # elif rot == 5:
+            #     y = x[[1, 3, 2, 4],:]
+            #     y_gt_list[:,3] = -gt_list[:,3]+90
+            # elif rot == 6:
+            #     y = x[[4, 3, 2, 1],:]
+            #     y_gt_list[:,3] += 90
+            # elif rot == 7:
+            #     y = x[[3, 4, 1, 2],:]
+            #     y_gt_list[:,[3,4]] *= -1
+            #     y_gt_list[:,3] += 180
         else:
             raise NotImplementedError('This format is not supported')
         return y, y_gt_list
