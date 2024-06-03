@@ -30,7 +30,7 @@ class Preprocessor:
         self.args = args
         self.cfg = cfg
         self.dataset = dataset
-
+        self.dataset_type = args.dataset_type
         # Path for dataset
         hdf5_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset'])
 
@@ -133,7 +133,7 @@ class Preprocessor:
         self.scalar_h5_dir.mkdir(parents=True, exist_ok=True)
 
         cuda_enabled = not self.args.no_cuda and torch.cuda.is_available()
-        train_set = BaseDataset(self.args, self.cfg, self.dataset)
+        train_set = BaseDataset(self.args, self.cfg, self.dataset, self.dataset_type)
         data_generator = DataLoader(
             dataset=train_set,
             batch_size=32,
@@ -146,17 +146,6 @@ class Preprocessor:
         iterator = tqdm(enumerate(data_generator), total=len(data_generator), unit='it')
         features = []
         begin_time = timer()
-
-        # for it, batch_sample in iterator:
-        #     if it == len(data_generator):
-        #         break
-        #     batch_x = batch_sample.batch_out_dict['waveform']
-        #     batch_x.require_grad = False
-        #     if cuda_enabled:
-        #         batch_x = batch_x.cuda(non_blocking=True)
-        #     batch_y = af_extractor(batch_x).transpose(0, 1)
-        #     C, _, _, F = batch_y.shape
-        #     features.append(batch_y.reshape(C, -1, F).cpu().numpy())
         
         for it, batch_sample in iterator:
             if it == len(data_generator):

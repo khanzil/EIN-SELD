@@ -13,7 +13,7 @@ class BaseDataset(Dataset):
     """ User defined datset
 
     """
-    def __init__(self, args, cfg, dataset):
+    def __init__(self, args, cfg, dataset, dataset_type = 'dev'):
         """
         Args:
             args: input args
@@ -35,7 +35,7 @@ class BaseDataset(Dataset):
         # Data path
         data_sr_folder_name = '{}fs'.format(self.sample_rate)
         main_data_dir = Path(cfg['hdf5_dir']).joinpath(cfg['dataset']).joinpath('data').joinpath(data_sr_folder_name)
-        self.data_dir = main_data_dir.joinpath('dev').joinpath(cfg['data']['type'])
+        self.data_dir = main_data_dir.joinpath(dataset_type).joinpath(cfg['data']['type'])
         self.fn_list = [path.stem for path in sorted(self.data_dir.glob('*.h5')) \
             if not path.name.startswith('.')]           
         # self.fn_list = [fn + '%' + str(n) for fn in self.fn_list for n in range(self.num_segments)]
