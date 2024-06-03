@@ -39,14 +39,17 @@ class Inferer(BaseInferer):
 
         iterator = tqdm(generator)
         for batch_sample in iterator:
-            batch_x = batch_sample['waveform']
+            batch_x = batch_sample['feature']
             if self.cuda:
                 batch_x = batch_x.cuda(non_blocking=True)
             with torch.no_grad():
-                self.af_extractor.eval()
+                # self.af_extractor.eval()
                 self.model.eval()
-                batch_x = self.af_extractor(batch_x)
-                batch_x = (batch_x - self.mean) / self.std
+                # batch_x = self.af_extractor(batch_x)
+                if self.mean.shape[1] < batch_x.shape[1]:
+                    batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
+                else:
+                    batch_x = (batch_x - self.mean) / self.std
                 pred = self.model(batch_x)
                 pred['sed'] = torch.sigmoid(pred['sed'])
             fn_list.append(batch_sample['filename'])

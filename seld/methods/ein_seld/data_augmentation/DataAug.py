@@ -84,7 +84,7 @@ class AudioChannelSwapping(nn.Module):
     def forward(self, x, gt_list, format = 'foa'):
         '''
         input:
-            x (Tensor): features channels, size (batch x channel x time x freq)
+            x (Tensor): features channels, size (batch x [w,y,z,x] x time x freq)
             gt_list: ground truth label of x, tensor size (batch,frame,track,[x,y,z])
             format: audio format
         output:
