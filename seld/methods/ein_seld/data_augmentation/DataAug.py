@@ -7,7 +7,7 @@ np.random.seed(2)
 cfg = {}
 
 class SpecAug(nn.Module):
-    def __init__(self, time_mask_max_len=30, time_mask_step=100, freq_mask_max_len=35, p=1):
+    def __init__(self, time_mask_max_len=10, time_mask_step=40, freq_mask_max_len=20, p=1):
         super().__init__()
         self._time_mask_max_len = time_mask_max_len
         self._time_mask_step = time_mask_step
@@ -41,7 +41,7 @@ class SpecAug(nn.Module):
         return x
 
 class RandomCutoff(nn.Module):
-    def __init__(self, time_mask_max_len=30, time_mask_step=100, freq_mask_max_len=15, p=0.3):
+    def __init__(self, time_mask_max_len=10, time_mask_step=40, freq_mask_max_len=20, p=0.3):
         super().__init__()
         self._time_mask_step = time_mask_step
         self._time_mask_max_len = time_mask_max_len
