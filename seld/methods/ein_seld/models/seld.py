@@ -10,7 +10,7 @@ class EINV2(nn.Module):
         super().__init__()
         self.pe_enable = False  # Ture | False
 
-        if cfg['data']['audio_feature'] == 'logmel&intensity':
+        if cfg['data']['audio_feature'] == 'logmel_intensity':
             self.f_bins = cfg['data']['n_mels']
             self.in_channels = 7
 
