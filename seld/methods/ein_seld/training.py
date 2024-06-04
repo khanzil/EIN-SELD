@@ -86,8 +86,8 @@ class Trainer(BaseTrainer):
         acs = AudioChannelSwapping()
         specaug = SpecAug()
  
-        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
-        # batch_x = specaug(batch_x)
+        # batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        batch_x = specaug(batch_x)
 
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)

@@ -7,7 +7,7 @@ np.random.seed(2)
 cfg = {}
 
 class SpecAug(nn.Module):
-    def __init__(self, time_mask_max_len=20, time_mask_step=100, freq_mask_max_len=15, p=0.3):
+    def __init__(self, time_mask_max_len=30, time_mask_step=100, freq_mask_max_len=35, p=1):
         super().__init__()
         self._time_mask_max_len = time_mask_max_len
         self._time_mask_step = time_mask_step
