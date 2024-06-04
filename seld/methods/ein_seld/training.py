@@ -85,7 +85,6 @@ class Trainer(BaseTrainer):
         
         acs = AudioChannelSwapping()
         specaug = SpecAug()
-        # rc = RandomCutoff()
  
         batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
         batch_x = specaug(batch_x)

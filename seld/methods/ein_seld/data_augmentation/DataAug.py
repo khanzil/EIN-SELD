@@ -34,10 +34,9 @@ class SpecAug(nn.Module):
                 time_mask_start = torch.randint(low=0, high=self._time_mask_step - time_mask_len, size=(1,))[0]
                 x[channel, self._time_mask_step*time + time_mask_start: self._time_mask_step*time + time_mask_start + time_mask_len, :] = np.log(eps)
     
-                freq_mask_len = torch.randint(low=0, high=self._freq_mask_max_len, size=(2,))
-                freq_mask_start = torch.randint(low=0, high=nb_mels-torch.max(freq_mask_len), size=(2,))
-                x[channel, self._time_mask_step*time:self._time_mask_step*(time+1), freq_mask_start[0]:freq_mask_start[0]+freq_mask_len[0]] = np.log(eps)
-                x[channel, self._time_mask_step*time:self._time_mask_step*(time+1), freq_mask_start[1]:freq_mask_start[1]+freq_mask_len[1]] = np.log(eps)
+                freq_mask_len = torch.randint(low=0, high=self._freq_mask_max_len, size=(1,))[0]
+                freq_mask_start = torch.randint(low=0, high=nb_mels-torch.max(freq_mask_len), size=(1,))[0]
+                x[channel, self._time_mask_step*time:self._time_mask_step*(time+1), freq_mask_start:freq_mask_start + freq_mask_len] = np.log(eps)
     
         return x
 
