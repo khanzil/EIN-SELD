@@ -16,7 +16,7 @@ data:
   train_hoplen_sec: 4
   test_chunklen_sec: 4
   test_hoplen_sec: 4
-  audio_feature: logmel&intensity
+  audio_feature: logmel_intensity
   feature_freeze: True
 data_augmentation: 
   type: None

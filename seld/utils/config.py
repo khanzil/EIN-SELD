@@ -134,7 +134,7 @@ def get_afextractor(cfg, cuda):
     """ Get audio feature extractor
 
     """
-    if cfg['data']['audio_feature'] == 'logmel&intensity':
+    if cfg['data']['audio_feature'] == 'logmel_intensity':
         afextractor = feature.LogmelIntensity_Extractor(cfg)
     afextractor = move_model_to_gpu(afextractor, cuda)
     return afextractor
