@@ -7,7 +7,7 @@ np.random.seed(2)
 cfg = {}
 
 class SpecAug(nn.Module):
-    def __init__(self, time_mask_max_len=30, time_mask_step=100, freq_mask_max_len=15, p=0.3):
+    def __init__(self, time_mask_max_len=20, time_mask_step=100, freq_mask_max_len=15, p=0.3):
         super().__init__()
         self._time_mask_max_len = time_mask_max_len
         self._time_mask_step = time_mask_step
@@ -29,14 +29,14 @@ class SpecAug(nn.Module):
 
         nb_mels = x.shape[3]
         for channel in range(x.shape[1]-3):
-            for time in range (int(x.shape[2]//self._time_mask_step)):
+            for frame in range (int(x.shape[2]//self._time_mask_step)):
                 time_mask_len = torch.randint(low=0, high=self._time_mask_max_len, size=(1,))[0]
                 time_mask_start = torch.randint(low=0, high=self._time_mask_step - time_mask_len, size=(1,))[0]
-                x[:, channel, self._time_mask_step*time + time_mask_start: self._time_mask_step*time + time_mask_start + time_mask_len, :] = np.log(eps)
+                x[:, channel, self._time_mask_step*frame + time_mask_start: self._time_mask_step*frame + time_mask_start + time_mask_len, :] = np.log(eps)
     
                 freq_mask_len = torch.randint(low=0, high=self._freq_mask_max_len, size=(1,))[0]
-                freq_mask_start = torch.randint(low=0, high=nb_mels-torch.max(freq_mask_len), size=(1,))[0]
-                x[:, channel, self._time_mask_step*time:self._time_mask_step*(time+1), freq_mask_start:freq_mask_start + freq_mask_len] = np.log(eps)
+                freq_mask_start = torch.randint(low=0, high=nb_mels-freq_mask_len, size=(1,))[0]
+                x[:, channel, self._time_mask_step*frame:self._time_mask_step*(frame+1), freq_mask_start:freq_mask_start + freq_mask_len] = np.log(eps)
     
         return x
 
