@@ -83,7 +83,7 @@ class Trainer(BaseTrainer):
         else:
             batch_x = (batch_x - self.mean) / self.std
         
-        acs = AudioChannelSwapping()
+        # acs = AudioChannelSwapping()
         specaug = SpecAug()
  
         batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])

@@ -7,7 +7,7 @@ np.random.seed(2)
 cfg = {}
 
 class SpecAug(nn.Module):
-    def __init__(self, time_mask_max_len=35, time_mask_step=100, freq_mask_max_len=30, p=0.5):
+    def __init__(self, time_mask_max_len=20, time_mask_step=100, freq_mask_max_len=15, p=0.3):
         super().__init__()
         self._time_mask_max_len = time_mask_max_len
         self._time_mask_step = time_mask_step
@@ -41,7 +41,7 @@ class SpecAug(nn.Module):
         return x
 
 class RandomCutoff(nn.Module):
-    def __init__(self, time_mask_max_len=35, time_mask_step=100, freq_mask_max_len=30, p=0.5):
+    def __init__(self, time_mask_max_len=20, time_mask_step=100, freq_mask_max_len=15, p=0.3):
         super().__init__()
         self._time_mask_step = time_mask_step
         self._time_mask_max_len = time_mask_max_len
@@ -72,7 +72,7 @@ class RandomCutoff(nn.Module):
         return x
 
 class AudioChannelSwapping(nn.Module):
-    def __init__(self, p=0.5):
+    def __init__(self, p=0.3):
         super().__init__()
 
         self._p = p
@@ -88,7 +88,9 @@ class AudioChannelSwapping(nn.Module):
             y (Tensor): swapped channels, same size as x
             y_gt_list: new ground truth label, same size as gt_list
         '''
-
+        if np.random.rand() > self._p:
+            return x, gt_list
+        
         y = x
         y_gt_list = gt_list
         if format == 'foa':
