@@ -76,9 +76,7 @@ class Trainer(BaseTrainer):
             batch_target['doa'] = batch_target['doa'].cuda(non_blocking=True)
 
         self.optimizer.zero_grad()
-        # self.af_extractor.train()
         self.model.train()
-        # batch_x = self.af_extractor(batch_x)
 
         if self.mean.shape[1] < batch_x.shape[1]:
             batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
@@ -90,7 +88,7 @@ class Trainer(BaseTrainer):
         rc = RandomCutoff()
         fs = FrequencyShifting()
  
-        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        # batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
         batch_x = fs(batch_x)
         p = np.random.rand()
         if p<0.33:
