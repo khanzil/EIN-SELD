@@ -122,7 +122,7 @@ class AudioChannelSwapping(nn.Module):
             elif rot_azi == 6:
                 y[:,[1, 3, 4, 6],:,:] = x[:,[3, 1, 6, 4],:,:]
 
-                y_gt_list[:,:,:,[0,1]] = -gt_list[:,:,:,[1,0]]  
+                y_gt_list[:,:,:,[0,1]] = gt_list[:,:,:,[1,0]]  
             elif rot_azi == 7:
                 y[:,[3, 6],:,:] = -x[:,[3, 6],:,:]
 
