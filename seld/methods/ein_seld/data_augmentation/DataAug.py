@@ -88,8 +88,6 @@ class AudioChannelSwapping(nn.Module):
             y (Tensor): swapped channels, same size as x
             y_gt_list: new ground truth label, same size as gt_list
         '''
-        if np.random.rand() > self._p:
-            return x, gt_list
         
         y = x
         y_gt_list = gt_list
