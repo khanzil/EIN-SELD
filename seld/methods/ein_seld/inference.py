@@ -45,6 +45,7 @@ class Inferer(BaseInferer):
         iterator = tqdm(generator)
         for batch_sample in iterator:
             batch_x = batch_sample['feature']
+            print(batch_x.shape)
             if self.cuda:
                 batch_x = batch_x.cuda(non_blocking=True)
             with torch.no_grad():
