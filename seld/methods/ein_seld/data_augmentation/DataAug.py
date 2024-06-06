@@ -8,7 +8,7 @@ np.random.seed(2)
 cfg = {}
 
 class SpecAug(nn.Module):
-    def __init__(self, time_mask_max_len=15, time_mask_num=2, freq_mask_max_len=20, freq_mask_num=2, p=1):
+    def __init__(self, time_mask_max_len=10, time_mask_num=2, freq_mask_max_len=35, freq_mask_num=2, p=1):
         super().__init__()
         self._time_mask_max_len = time_mask_max_len
         self._time_mask_num = time_mask_num
@@ -32,6 +32,18 @@ class SpecAug(nn.Module):
         transform = transforms.SpecAugment(n_freq_masks=self._freq_mask_num, freq_mask_param=self._freq_mask_max_len,\
                                            n_time_masks=self._time_mask_num, time_mask_param=self._time_mask_max_len, p=0.5)
 
+        # nb_mels = x.shape[3]
+        # for batch_idx in range(x.shape[0]):
+        #     for channel in range(x.shape[1]-3):
+        #         for frame in range (int(x.shape[2]//self._time_mask_step)):
+        #             time_mask_len = torch.randint(low=0, high=self._time_mask_max_len, size=(1,))[0]
+        #             time_mask_start = torch.randint(low=0, high=self._time_mask_step - time_mask_len, size=(1,))[0]
+        #             x[batch_idx, channel, self._time_mask_step*frame + time_mask_start: self._time_mask_step*frame + time_mask_start + time_mask_len, :] = np.log(eps)
+
+        #             freq_mask_len = torch.randint(low=0, high=self._freq_mask_max_len, size=(1,))[0]
+        #             freq_mask_start = torch.randint(low=0, high=nb_mels-freq_mask_len, size=(1,))[0]
+        #             x[batch_idx, channel, self._time_mask_step*frame:self._time_mask_step*(frame+1), freq_mask_start:freq_mask_start + freq_mask_len] = np.log(eps)
+    
         return transform(x)
 
 class RandomCutoff(nn.Module):
