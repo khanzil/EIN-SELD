@@ -290,9 +290,9 @@ class PinMemCustomBatch:
             batch_sed_label.append(batch_dict[n]['sed_label'])
             batch_doa_label.append(batch_dict[n]['doa_label'])
 
-        batch_x = np.concatenate(batch_x, axis=0)
-        batch_sed_label = np.concatenate(batch_sed_label, axis=0)
-        batch_doa_label = np.concatenate(batch_doa_label, axis=0)
+        batch_x = np.stack(batch_x, axis=0)
+        batch_sed_label = np.stack(batch_sed_label, axis=0)
+        batch_doa_label = np.stack(batch_doa_label, axis=0)
 
         self.batch_out_dict = {
             'filename': batch_fn,
