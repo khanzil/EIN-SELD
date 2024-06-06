@@ -290,6 +290,10 @@ class PinMemCustomBatch:
             batch_sed_label.append(batch_dict[n]['sed_label'])
             batch_doa_label.append(batch_dict[n]['doa_label'])
 
+        batch_x = np.concatenate(batch_x, axis=0)
+        batch_sed_label = np.concatenate(batch_sed_label, axis=0)
+        batch_doa_label = np.concatenate(batch_doa_label, axis=0)
+
         self.batch_out_dict = {
             'filename': batch_fn,
             'n_segment': batch_n_segment,
@@ -324,6 +328,8 @@ class PinMemCustomBatchTest:
             batch_fn.append(batch_dict[n]['filename'])
             batch_n_segment.append(batch_dict[n]['n_segment'])
             batch_x.append(batch_dict[n]['feature'])
+
+        batch_x = np.concatenate(batch_x, axis=0)
 
         self.batch_out_dict = {
             'filename': batch_fn,
