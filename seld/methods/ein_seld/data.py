@@ -329,7 +329,7 @@ class PinMemCustomBatchTest:
             batch_n_segment.append(batch_dict[n]['n_segment'])
             batch_x.append(batch_dict[n]['feature'])
 
-        batch_x = np.concatenate(batch_x, axis=0)
+        batch_x = np.stack(batch_x, axis=0)
 
         self.batch_out_dict = {
             'filename': batch_fn,
