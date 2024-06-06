@@ -19,7 +19,7 @@ data:
   audio_feature: logmel_intensity
   feature_freeze: True
 data_augmentation: 
-  type: acs,specaug
+  type: None # acs,specaug
 training:
   train_id: EINV2_tPIT_n1
   model: EINV2
