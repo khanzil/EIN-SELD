@@ -32,7 +32,7 @@ def train(cfg, **initializer):
         ################
         ## Validation
         ################
-        if it % int(1*batchNum_per_epoch) == 0: # and (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):
+        if it % int(1*batchNum_per_epoch) == 0:
             valid_begin_time = timer()
             train_time = valid_begin_time - train_begin_time
 
@@ -40,12 +40,14 @@ def train(cfg, **initializer):
             for k, v in train_losses.items():
                 train_losses[k] = v / batchNum_per_epoch
 
-            if cfg['training']['valid_fold']:
-                valid_losses, valid_metrics = trainer.validate_step(
-                    generator=valid_generator,
-                    valid_type='valid',
-                    epoch_it=epoch_it
-                )
+            if (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):
+                if cfg['training']['valid_fold']:
+                    valid_losses, valid_metrics = trainer.validate_step(
+                        generator=valid_generator,
+                        valid_type='valid',
+                        epoch_it=epoch_it
+                    )
+
             valid_time = timer() - valid_begin_time
 
             writer.add_scalar('train/lr', lr_scheduler.get_last_lr()[0], it)
@@ -54,10 +56,13 @@ def train(cfg, **initializer):
             logging.info('Iter: {},  Epoch/Total Epoch: {}/{},  Batch/Total Batch: {}/{}'.format(
                 it, epoch_it, max_epoch, rem_batch, batchNum_per_epoch))
             print_metrics(logging, writer, train_losses, it, set_type='train')
-            if cfg['training']['valid_fold']:
-                print_metrics(logging, writer, valid_losses, it, set_type='valid')
-            if cfg['training']['valid_fold']:
-                print_metrics(logging, writer, valid_metrics, it, set_type='valid')
+
+            if (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):            
+                if cfg['training']['valid_fold']:
+                    print_metrics(logging, writer, valid_losses, it, set_type='valid')
+                if cfg['training']['valid_fold']:
+                    print_metrics(logging, writer, valid_metrics, it, set_type='valid')
+                
             logging.info('Train time: {:.3f}s,  Valid time: {:.3f}s,  Lr: {}'.format(
                 train_time, valid_time, lr_scheduler.get_last_lr()[0]))
             if 'PIT_type' in cfg['training']:
