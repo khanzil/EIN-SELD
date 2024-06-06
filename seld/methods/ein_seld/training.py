@@ -21,6 +21,7 @@ class Trainer(BaseTrainer):
         self.losses = losses
         self.metrics = metrics
         self.cuda = args.cuda
+        self.data_aug = str(cfg['data_augmentation']['type']).split(',')
 
         self.clip_length = dataset.clip_length
         self.label_resolution = dataset.label_resolution
@@ -83,12 +84,14 @@ class Trainer(BaseTrainer):
         else:
             batch_x = (batch_x - self.mean) / self.std
         
-        acs = AudioChannelSwapping()
-        specaug = SpecAug()
- 
-        batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
-        batch_x = specaug(batch_x)
-
+        if 'acs' in self.data_aug:
+            acs = AudioChannelSwapping()
+            batch_x, batch_target['doa'] = acs(batch_x, batch_target['doa'])
+        
+        if 'specaug' in self.data_aug:
+            specaug = SpecAug()
+            batch_x = specaug(batch_x)
+    
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
         loss_dict[self.cfg['training']['loss_type']].backward()
