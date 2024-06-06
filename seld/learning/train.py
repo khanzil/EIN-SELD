@@ -32,7 +32,7 @@ def train(cfg, **initializer):
         ################
         ## Validation
         ################
-        if it % int(1*batchNum_per_epoch) == 0 and (epoch_it < 10 or epoch_it > 80 or epoch_it % 10 == 0):
+        if it % int(1*batchNum_per_epoch) == 0: # and (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):
             valid_begin_time = timer()
             train_time = valid_begin_time - train_begin_time
 
