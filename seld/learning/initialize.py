@@ -163,10 +163,20 @@ def init_infer(args, cfg, dataset):
     for train_id, model_name in zip(train_ids, models):
         ckpts_dir = Path(cfg['workspace_dir']).joinpath('out_train').joinpath(cfg['method']) \
             .joinpath(train_id).joinpath('checkpoints')
-        ckpt_path = [path for path in sorted(ckpts_dir.glob('*.pth'))] # if path.stem.split('_')[-1].isnumeric()]
-        for path in ckpt_path:
-            ckpts_paths_list.append(path)
+        
+        ckpt_path = [path for path in sorted(ckpts_dir.glob('*.pth')) if path.stem.split('_')[-1].isnumeric()]
+        best_ckpt_path = ['{}_epoch_best.pth'.format(cfg['inference']['remark'])] 
+
+        if best_ckpt_path in ckpts_dir.glob('*.pth'):
+            ckpts_paths_list.append(best_ckpt_path)
+
+        ckpts_paths_list.append(ckpt_path[-1])
+
+        if ckpts_paths_list != []:
             ckpts_models_list.append(model_name)
+        # for path in ckpt_path:
+        #     ckpts_paths_list.append(path)
+        #     ckpts_models_list.append(model_name)
     
     '''Parameters'''
     param_file = out_infer_dir.joinpath('config.yaml')
