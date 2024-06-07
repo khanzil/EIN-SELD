@@ -23,7 +23,8 @@ def infer(cfg, dataset, **infer_initializer):
         pred = inferer.infer(test_generator)
         preds.append(pred)
         print('\n  Inference finished for {}\n'.format(ckpt_path))
-        inferer.fusion(submissions_dir.joinpath(ckpt_path.stem()), preds)
+        print(submissions_dir.joinpath(ckpt_path.split().stem()))
+        inferer.fusion(submissions_dir.joinpath(ckpt_path.split().stem()), preds)
 
 
 
