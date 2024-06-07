@@ -47,4 +47,4 @@ inference:
   models: EINV2
   batch_size: 64
   threshold_sed: 0.5
-  remark: ACS_SpecAug
+  remark: None
