@@ -165,7 +165,7 @@ def init_infer(args, cfg, dataset):
             .joinpath(train_id).joinpath('checkpoints')
         
         ckpt_path = [path for path in sorted(ckpts_dir.glob('*.pth')) if path.stem.split('_')[-1].isnumeric()]
-        best_ckpt_path = ['{}_epoch_best.pth'.format(cfg['inference']['remark'])] 
+        best_ckpt_path = ckpts_dir.joinpath('{}_epoch_best.pth'.format(cfg['inference']['remark']))
 
         if best_ckpt_path in ckpts_dir.glob('*.pth'):
             ckpts_paths_list.append(best_ckpt_path)
