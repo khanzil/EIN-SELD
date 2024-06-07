@@ -172,11 +172,8 @@ def init_infer(args, cfg, dataset):
 
         ckpts_paths_list.append(ckpt_path[-1])
 
-        if ckpts_paths_list != []:
+        for _ in ckpts_paths_list:
             ckpts_models_list.append(model_name)
-        # for path in ckpt_path:
-        #     ckpts_paths_list.append(path)
-        #     ckpts_models_list.append(model_name)
     
     '''Parameters'''
     param_file = out_infer_dir.joinpath('config.yaml')
