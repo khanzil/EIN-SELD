@@ -24,7 +24,7 @@ def infer(cfg, dataset, **infer_initializer):
         preds.append(pred)
         print('\n  Inference finished for {}\n'.format(ckpt_path))
         print(submissions_dir.joinpath(ckpt_path.split().stem()))
-        inferer.fusion(submissions_dir.joinpath(ckpt_path.split().stem()), preds)
+        inferer.fusion(submissions_dir.joinpath(ckpt_path.split("/")[-1].stem()), preds)
 
 
 
