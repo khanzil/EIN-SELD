@@ -22,7 +22,7 @@ def evaluate(cfg, dataset):
 
     out_infer_dir = Path(cfg['workspace_dir']).joinpath('out_infer').joinpath(cfg['method']) \
         .joinpath(cfg['inference']['infer_id'])
-    submissions_dir = out_infer_dir.joinpath('submissions').joinpath("None_epoch_best")
+    submissions_dir = out_infer_dir.joinpath('submissions')
 
     main_dir = Path(cfg['dataset_dir'])
     dev_meta_dir = main_dir.joinpath('metadata_dev')
@@ -110,7 +110,7 @@ def evaluate(cfg, dataset):
     #     print('')
 
     out_eval_dir = Path(cfg['workspace_dir']).joinpath('out_eval').joinpath(cfg['method']) \
-        .joinpath(cfg['inference']['infer_id']).joinpath("None_epoch_best")
+        .joinpath(cfg['inference']['infer_id'])
     out_eval_dir.mkdir(parents=True, exist_ok=True)
     result_path = out_eval_dir.joinpath('results.csv')
     df = pd.DataFrame(metrics_scores, index=[0])
