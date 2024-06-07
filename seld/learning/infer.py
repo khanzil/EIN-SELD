@@ -1,7 +1,6 @@
 import torch
 from utils.config import get_afextractor, get_inferer, get_models
 
-
 def infer(cfg, dataset, **infer_initializer):
     """ Infer, only save the testset predictions
 
@@ -12,7 +11,6 @@ def infer(cfg, dataset, **infer_initializer):
     test_generator = infer_initializer['test_generator']
     cuda = infer_initializer['cuda']
     preds = []
-    submissions_dir.joinpath(ckpt_path.stem).makedirs(exist_ok=True)
     for ckpt_path, model_name in zip(ckpts_paths_list, ckpts_models_list):
         print('=====>> Resuming from the checkpoint: {}\n'.format(ckpt_path))
         af_extractor = get_afextractor(cfg, cuda)
@@ -24,7 +22,9 @@ def infer(cfg, dataset, **infer_initializer):
         pred = inferer.infer(test_generator)
         preds.append(pred)
         print('\n  Inference finished for {}\n'.format(ckpt_path))
-        inferer.fusion(submissions_dir.joinpath(ckpt_path.stem), preds)
+        sub_dir = submissions_dir.joinpath(ckpt_path.stem)
+        sub_dir.mkdir()
+        inferer.fusion(sub_dir, preds)
 
 
 
