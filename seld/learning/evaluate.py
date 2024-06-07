@@ -22,7 +22,7 @@ def evaluate(cfg, dataset):
 
     out_infer_dir = Path(cfg['workspace_dir']).joinpath('out_infer').joinpath(cfg['method']) \
         .joinpath(cfg['inference']['infer_id'])
-    submissions_dir = out_infer_dir.joinpath('submissions')
+    submissions_dir = out_infer_dir.joinpath('submissions').joinpath("None_epoch_90")
 
     main_dir = Path(cfg['dataset_dir'])
     dev_meta_dir = main_dir.joinpath('metadata_dev')
