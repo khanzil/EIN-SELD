@@ -12,6 +12,7 @@ def infer(cfg, dataset, **infer_initializer):
     test_generator = infer_initializer['test_generator']
     cuda = infer_initializer['cuda']
     preds = []
+    submissions_dir.joinpath(ckpt_path.stem).makedirs(exist_ok=True)
     for ckpt_path, model_name in zip(ckpts_paths_list, ckpts_models_list):
         print('=====>> Resuming from the checkpoint: {}\n'.format(ckpt_path))
         af_extractor = get_afextractor(cfg, cuda)
