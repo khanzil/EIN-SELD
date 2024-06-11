@@ -101,7 +101,7 @@ def init_train(args, cfg, dataset):
         optimizer=optimizer,
         batch_sampler=batch_sampler,
         metrics_names=metrics_names,
-        num_checkpoints=10,  
+        num_checkpoints=10,
         remark=cfg['training']['remark']
     )
 
