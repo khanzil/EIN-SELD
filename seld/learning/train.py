@@ -40,7 +40,7 @@ def train(cfg, **initializer):
             for k, v in train_losses.items():
                 train_losses[k] = v / batchNum_per_epoch
 
-            # if (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):
+            # if (epoch_it < 10 or epoch_it > 80 or epoch_it % 10 == 0):
             if cfg['training']['valid_fold']:
                 valid_losses, valid_metrics = trainer.validate_step(
                     generator=valid_generator,
@@ -57,7 +57,7 @@ def train(cfg, **initializer):
                 it, epoch_it, max_epoch, rem_batch, batchNum_per_epoch))
             print_metrics(logging, writer, train_losses, it, set_type='train')
 
-            # if (epoch_it < 10 or epoch_it > 80 or epoch_it % 5 == 0):            
+            # if (epoch_it < 10 or epoch_it > 80 or epoch_it % 10 == 0):            
             if cfg['training']['valid_fold']:
                 print_metrics(logging, writer, valid_losses, it, set_type='valid')
             if cfg['training']['valid_fold']:
@@ -77,9 +77,9 @@ def train(cfg, **initializer):
         ###############
         if rem_batch == 0 and it > 0:
             if cfg['training']['valid_fold']:
-                ckptIO.save(epoch_it, it, metrics=valid_metrics, key_rank='seld20', rank_order='high')
+                ckptIO.save(epoch_it, it, metrics=valid_metrics, key_rank='seld20', rank_order='low')
             else:
-                ckptIO.save(epoch_it, it, metrics=train_losses, key_rank='loss_all', rank_order='high')
+                ckptIO.save(epoch_it, it, metrics=train_losses, key_rank='loss_all', rank_order='low')
 
         ###############
         ## Finish training
