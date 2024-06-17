@@ -6,12 +6,12 @@ hdf5_dir: /kaggle/input/salsa-foa-square/_hdf5
 data:
   type: foa
   sample_rate: 24000
-  n_fft: 1024
-  hop_length: 600
-  n_mels: 256
+  n_fft: 512
+  hop_length: 300
+  n_mels: 200
   window: hann
   fmin: 20
-  fmax: 12000
+  fmax: 9000
   train_chunklen_sec: 4
   train_hoplen_sec: 4
   test_chunklen_sec: 4
