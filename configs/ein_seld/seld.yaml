@@ -2,13 +2,13 @@ method: ein_seld
 dataset: dcase2020task3
 workspace_dir: ./
 dataset_dir: ./_dataset/dataset_root
-hdf5_dir: /kaggle/input/salsa-foa-square-512/_hdf5
+hdf5_dir: /kaggle/input/salsa-foa-time-1024/_hdf5
 data:
   type: foa
   sample_rate: 24000
-  n_fft: 512
-  hop_length: 300
-  n_mels: 200
+  n_fft: 1024
+  hop_length: 600
+  n_mels: 256
   window: hann
   fmin: 20
   fmax: 12000
