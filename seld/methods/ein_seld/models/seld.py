@@ -25,7 +25,7 @@ class EINV2(nn.Module):
         )
         self.sed_conv_block3 = nn.Sequential(
             DoubleConv(in_channels=128, out_channels=256),
-            nn.AvgPool2d(kernel_size=(2, 2)),
+            nn.AvgPool2d(kernel_size=(1, 2)),
         )
         self.sed_conv_block4 = nn.Sequential(
             DoubleConv(in_channels=256, out_channels=512),
@@ -42,7 +42,7 @@ class EINV2(nn.Module):
         )
         self.doa_conv_block3 = nn.Sequential(
             DoubleConv(in_channels=128, out_channels=256),
-            nn.AvgPool2d(kernel_size=(2, 2)),
+            nn.AvgPool2d(kernel_size=(1, 2)),
         )
         self.doa_conv_block4 = nn.Sequential(
             DoubleConv(in_channels=256, out_channels=512),
