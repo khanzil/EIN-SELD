@@ -77,9 +77,9 @@ def train(cfg, **initializer):
         ###############
         if rem_batch == 0 and it > 0:
             if cfg['training']['valid_fold']:
-                ckptIO.save(epoch_it, it, metrics=valid_metrics, key_rank='seld20', rank_order='low')
+                ckptIO.save(epoch_it, it, metrics=valid_metrics, key_rank='seld20', rank_order='latest')
             else:
-                ckptIO.save(epoch_it, it, metrics=train_losses, key_rank='loss_all', rank_order='low')
+                ckptIO.save(epoch_it, it, metrics=train_losses, key_rank='loss_all', rank_order='latest')
 
         ###############
         ## Finish training
