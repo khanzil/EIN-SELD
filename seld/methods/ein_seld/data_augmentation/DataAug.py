@@ -25,14 +25,14 @@ class SpecAug(nn.Module):
         input: 
             x (Tensor): feature channels, size (batch x channel x time x freq)
         output:
-            y (Tensor): T-F masked x, same size as x, last 3 channel is not masked
+            y (Tensor): T-F masked x, same size as x
         '''
         if np.random.rand() > self._p:
             return x
         transform = transforms.SpecAugment(n_freq_masks=self._freq_mask_num, freq_mask_param=self._freq_mask_max_len,\
-                                           n_time_masks=self._time_mask_num, time_mask_param=self._time_mask_max_len, p=0.5)
-
-        return transform(x)
+                                           n_time_masks=self._time_mask_num, time_mask_param=self._time_mask_max_len, p=0.15)
+        # x[:,4:,:,:] = transform(x.permute(0,1,3,2)).permute(0,1,3,2)
+        return transform(x.permute(0,1,3,2)).permute(0,1,3,2)
 
 class RandomCutoff(nn.Module):
     def __init__(self, time_mask_max_len=10, time_mask_step=40, freq_mask_max_len=35, p=0.3):
