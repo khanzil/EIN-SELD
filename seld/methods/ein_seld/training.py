@@ -83,7 +83,7 @@ class Trainer(BaseTrainer):
         #     batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
         # else:
         #     batch_x = (batch_x - self.mean) / self.std
-        batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean) / self.std
+        batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean[:,:4,:,:]) / self.std[:,:4,:,:]
         
         if 'acs' in self.data_aug:
             acs = AudioChannelSwapping()
