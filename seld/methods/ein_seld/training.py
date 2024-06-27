@@ -79,10 +79,11 @@ class Trainer(BaseTrainer):
         self.optimizer.zero_grad()
         self.model.train()
 
-        if self.mean.shape[1] < batch_x.shape[1]:
-            batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
-        else:
-            batch_x = (batch_x - self.mean) / self.std
+        # if self.mean.shape[1] < batch_x.shape[1]:
+        #     batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
+        # else:
+        #     batch_x = (batch_x - self.mean) / self.std
+        batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean) / self.std
         
         if 'acs' in self.data_aug:
             acs = AudioChannelSwapping()
