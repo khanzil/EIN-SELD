@@ -91,7 +91,7 @@ class Trainer(BaseTrainer):
         
         if 'specaug' in self.data_aug:
             specaug = SpecAug()
-            batch_x = specaug(batch_x)
+            batch_x[:,:4,:,:] = specaug(batch_x[:,:4,:,:])
     
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
