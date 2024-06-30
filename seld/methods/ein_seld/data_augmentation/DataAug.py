@@ -180,15 +180,14 @@ class FrequencyShifting(nn.Module):
             return x
 
         y = x
-        for batch_idx in range (x.shape[0]):
-            shift_len = np.random.choice(self._shift_range)
-            dir = np.random.choice(['up', 'down'])
-            if dir == 'up':
-                y = torch.roll(y, shift_len, dims=3)
-                y[batch_idx,:,:,:shift_len] = 0
-            else:
-                y = torch.roll(y, -shift_len, dims=3)
-                y[batch_idx,:,:,-shift_len:] = 0
+        shift_len = np.random.choice(self._shift_range)
+        dir = np.random.choice(['up', 'down'])
+        if dir == 'up':
+            y = torch.roll(y, shift_len, dims=3)
+            y[:,:,:,:shift_len] = 0
+        else:
+            y = torch.roll(y, -shift_len, dims=3)
+            y[:,:,:,-shift_len:] = 0
 
         return y
 
