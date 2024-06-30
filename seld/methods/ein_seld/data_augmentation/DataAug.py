@@ -172,7 +172,7 @@ class FrequencyShifting(nn.Module):
     def forward(self, x):
         '''
         input:
-            x (Tensor): features channels, size (channel x time x freq)
+            x (Tensor): features channels, size (batch x channel x time x freq)
         output:
             y (Tensor): shifted frequency channels
         ''' 
@@ -180,14 +180,15 @@ class FrequencyShifting(nn.Module):
             return x
 
         y = x
-        shift_len = np.random.choice(self._shift_range)
-        dir = np.random.choice(['up', 'down'])
-        if dir == 'up':
-            y = torch.roll(y, shift_len, dims=2)
-            y[:,:,0:shift_len] = 0
-        else:
-            y = torch.roll(y, -shift_len, dims=2)
-            y[:,:,-shift_len:] = 0
+        for batch_idx in range (x.shape[0]):
+            shift_len = np.random.choice(self._shift_range)
+            dir = np.random.choice(['up', 'down'])
+            if dir == 'up':
+                y = torch.roll(y, shift_len, dims=3)
+                y[batch_idx,:,:,:shift_len] = 0
+            else:
+                y = torch.roll(y, -shift_len, dims=3)
+                y[batch_idx,:,:,-shift_len:] = 0
 
         return y
 
