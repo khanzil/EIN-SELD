@@ -93,6 +93,10 @@ class Trainer(BaseTrainer):
             specaug = SpecAug()
             batch_x = specaug(batch_x)
     
+        if 'fs' in self.data_aug:
+            fs = FrequencyShifting()
+            batch_x = fs(batch_x)
+
         pred = self.model(batch_x)
         loss_dict = self.losses.calculate(pred, batch_target)
         loss_dict[self.cfg['training']['loss_type']].backward()
