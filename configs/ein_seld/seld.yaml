@@ -2,7 +2,7 @@ method: ein_seld
 dataset: dcase2020task3
 workspace_dir: ./
 dataset_dir: ./_dataset/dataset_root
-hdf5_dir: /kaggle/input/salsa-ssquare-1024-mel/_hdf5
+hdf5_dir: /kaggle/input/salsa-time-1024-mel/_hdf5
 data:
   type: foa
   sample_rate: 24000
@@ -19,7 +19,7 @@ data:
   audio_feature: logmel_intensity
   feature_freeze: True
 data_augmentation: 
-  type: acs,specaug # None | acs,specaug
+  type: None # None | acs,specaug
 training:
   train_id: EINV2_tPIT_n1
   model: EINV2
