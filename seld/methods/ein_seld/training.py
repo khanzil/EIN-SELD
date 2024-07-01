@@ -79,11 +79,11 @@ class Trainer(BaseTrainer):
         self.optimizer.zero_grad()
         self.model.train()
 
-        if self.mean.shape[1] < batch_x.shape[1]:
-            batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
-        else:
-            batch_x = (batch_x - self.mean) / self.std
-        # batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean[:,:4,:,:]) / self.std[:,:4,:,:]
+        # if self.mean.shape[1] < batch_x.shape[1]:
+        #     batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
+        # else:
+        #     batch_x = (batch_x - self.mean) / self.std
+        batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean[:,:4,:,:]) / self.std[:,:4,:,:]
         
         if 'acs' in self.data_aug:
             acs = AudioChannelSwapping()
@@ -142,11 +142,12 @@ class Trainer(BaseTrainer):
                     # self.af_extractor.eval()
                     self.model.eval()
                     # batch_x = self.af_extractor(batch_x)
-                    if self.mean.shape[1] < batch_x.shape[1]:
-                        batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
-                    else:
-                        batch_x = (batch_x - self.mean) / self.std
-                        
+                    # if self.mean.shape[1] < batch_x.shape[1]:
+                    #     batch_x[:,:self.mean.shape[1],:,:] = (batch_x[:,:self.mean.shape[1],:,:] - self.mean) / self.std
+                    # else:
+                    #     batch_x = (batch_x - self.mean) / self.std
+                    batch_x[:,:4,:,:] = (batch_x[:,:4,:,:] - self.mean[:,:4,:,:]) / self.std[:,:4,:,:]
+
                     pred = self.model(batch_x)
                 loss_dict = self.losses.calculate(pred, batch_target, epoch_it)
                 pred['sed'] = torch.sigmoid(pred['sed'])
